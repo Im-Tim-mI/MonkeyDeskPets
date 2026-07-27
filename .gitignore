@@ -1,0 +1,24 @@
+# macOS
+.DS_Store
+*.xcuserstate
+
+# Swift Package Manager
+.build/
+**/.build/
+
+# Xcode
+DerivedData/
+**/DerivedData/
+*.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+
+# 建置及發布輸出
+dist/
+**/dist/
+release/
+**/release/
+
+# macOS 打包檔案
+*.app
+*.dmg
+*.pkg
