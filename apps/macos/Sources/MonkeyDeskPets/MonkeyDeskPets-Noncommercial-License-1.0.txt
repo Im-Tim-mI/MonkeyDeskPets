@@ -1,0 +1,25 @@
+MonkeyDeskPets Noncommercial License 1.0
+Based on PolyForm Noncommercial License 1.0.0
+
+Copyright © 2026 廷廷小教室（Tim945）
+
+The complete license for MonkeyDeskPets consists of all of the following
+documents, which must be read and applied together:
+
+1. POLYFORM-NONCOMMERCIAL-1.0.0.txt
+   The unmodified PolyForm Noncommercial License 1.0.0 text.
+2. ADDITIONAL-TERMS-zh-TW.txt
+   The controlling Advertising and Author Information Retention Terms.
+3. NOTICE
+   All Required Notice lines supplied with MonkeyDeskPets.
+
+ADDITIONAL-TERMS-en.txt is an English translation supplied for accessibility.
+If the English translation differs from ADDITIONAL-TERMS-zh-TW.txt, the
+Traditional Chinese text controls.
+
+Use, modification, reproduction, or distribution of MonkeyDeskPets constitutes
+acceptance of the complete MonkeyDeskPets Noncommercial License 1.0 described
+above.
+
+Required Notice: Copyright © 2026 廷廷小教室（Tim945）.
+Required Notice: MonkeyDeskPets is licensed under the MonkeyDeskPets Noncommercial License 1.0, based on PolyForm Noncommercial License 1.0.0.
