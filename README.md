@@ -1,6 +1,6 @@
 # 桌面猴群 MonkeyDeskPets
 
-目前版本：**2.7.2**
+目前版本：**2.7.4**
 
 作者：**廷廷小教室、廷廷的家（Tim945）**
 
@@ -93,7 +93,7 @@ chmod +x apps/macos/scripts/*.sh
 open release
 ```
 
-輸出為 `release/MonkeyDeskPets-macOS-v2.7.2.dmg` 與
+輸出為 `release/MonkeyDeskPets-macOS-v2.7.4.dmg` 與
 `release/SHA256SUMS.txt`。
 
 也可以直接開發執行：

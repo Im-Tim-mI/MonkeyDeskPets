@@ -188,7 +188,7 @@ latest project. `build-app.sh` installs the production Info.plist in the bundle.
 ### `awk: syntax error` or the DMG build stops after mounting
 
 An older `build-dmg.sh` over-escaped slash characters and failed with macOS BSD
-awk. Update to v2.7.2 or newer. If MonkeyDeskPets remains mounted after the old
+awk. Update to v2.7.4 or newer. If MonkeyDeskPets remains mounted after the old
 script fails, run:
 
 ```bash
@@ -418,8 +418,8 @@ If Arm64 is supported in the release, add the equivalent `win-arm64` files.
 The GitHub Release tag, title, `VERSION`, App version, and filenames must match:
 
 ```text
-Tag: v2.7.2
-Title: MonkeyDeskPets v2.7.2
+Tag: v2.7.4
+Title: MonkeyDeskPets v2.7.4
 ```
 
 ## 16. Verify SHA-256
@@ -427,13 +427,13 @@ Title: MonkeyDeskPets v2.7.2
 macOS:
 
 ```bash
-shasum -a 256 release/MonkeyDeskPets-macOS-v2.7.2.dmg
+shasum -a 256 release/MonkeyDeskPets-macOS-v2.7.4.dmg
 ```
 
 Windows:
 
 ```powershell
-Get-FileHash .\release\MonkeyDeskPets-Windows-win-x64-v2.7.2.zip -Algorithm SHA256
+Get-FileHash .\release\MonkeyDeskPets-Windows-win-x64-v2.7.4.zip -Algorithm SHA256
 ```
 
 The result must exactly match the corresponding `SHA256SUMS` file.

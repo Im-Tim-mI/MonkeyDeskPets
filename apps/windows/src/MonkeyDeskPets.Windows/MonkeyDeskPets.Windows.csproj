@@ -10,7 +10,7 @@
     <ApplicationIcon>Assets\MonkeyDeskPets.ico</ApplicationIcon>
     <AssemblyName>MonkeyDeskPets</AssemblyName>
     <RootNamespace>MonkeyDeskPets.Windows</RootNamespace>
-    <Version>2.7.2</Version>
+    <Version>2.7.4</Version>
     <Authors>廷廷小教室、廷廷的家（Tim945）</Authors>
     <Copyright>Copyright © 2026 廷廷小教室、廷廷的家（Tim945）</Copyright>
   </PropertyGroup>

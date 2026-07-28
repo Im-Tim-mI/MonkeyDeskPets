@@ -17,11 +17,11 @@
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleShortVersionString</key>
-    <string>2.7.2</string>
+    <string>2.7.4</string>
     <key>CFBundleVersion</key>
-    <string>272</string>
+    <string>274</string>
     <key>CFBundleGetInfoString</key>
-    <string>MonkeyDeskPets 2.7.2, Author: 廷廷小教室、廷廷的家（Tim945）, MonkeyDeskPets Noncommercial License 1.0</string>
+    <string>MonkeyDeskPets 2.7.4, Author: 廷廷小教室、廷廷的家（Tim945）, MonkeyDeskPets Noncommercial License 1.0</string>
     <key>NSHumanReadableCopyright</key>
     <string>Copyright © 2026 廷廷小教室、廷廷的家（Tim945）</string>
     <key>LSMinimumSystemVersion</key>

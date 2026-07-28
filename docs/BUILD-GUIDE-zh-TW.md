@@ -184,7 +184,7 @@ chmod +x apps/macos/scripts/*.sh
 ### `awk: syntax error` 或 DMG 停在掛載階段
 
 舊版 `build-dmg.sh` 曾對斜線重複跳脫，導致 macOS BSD awk 解析失敗。請更新到
-v2.7.2 或更新版本。若失敗後 Finder 仍掛載著 MonkeyDeskPets，先執行：
+v2.7.4 或更新版本。若失敗後 Finder 仍掛載著 MonkeyDeskPets，先執行：
 
 ```bash
 hdiutil detach "/Volumes/MonkeyDeskPets"
@@ -396,8 +396,8 @@ SHA256SUMS-Windows-win-x64-Setup.txt
 GitHub Release 的 Tag、標題、`VERSION`、App 版本和檔名必須一致，例如：
 
 ```text
-Tag: v2.7.2
-Title: MonkeyDeskPets v2.7.2
+Tag: v2.7.4
+Title: MonkeyDeskPets v2.7.4
 ```
 
 ## 16. SHA-256 驗證
@@ -405,13 +405,13 @@ Title: MonkeyDeskPets v2.7.2
 macOS：
 
 ```bash
-shasum -a 256 release/MonkeyDeskPets-macOS-v2.7.2.dmg
+shasum -a 256 release/MonkeyDeskPets-macOS-v2.7.4.dmg
 ```
 
 Windows：
 
 ```powershell
-Get-FileHash .\release\MonkeyDeskPets-Windows-win-x64-v2.7.2.zip -Algorithm SHA256
+Get-FileHash .\release\MonkeyDeskPets-Windows-win-x64-v2.7.4.zip -Algorithm SHA256
 ```
 
 結果必須和對應的 `SHA256SUMS` 文件完全一致。

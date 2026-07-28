@@ -58,32 +58,67 @@ if [[ -z "$mounted_device" || -z "$mount_point" ]]; then
     exit 1
 fi
 
-osascript <<'APPLESCRIPT'
+background_file="$mount_point/.background/installer-background.png"
+if [[ ! -f "$background_file" ]]; then
+    echo "錯誤：DMG 掛載後找不到安裝背景：$background_file" >&2
+    exit 1
+fi
+
+osascript <<APPLESCRIPT
+set dmgFolder to POSIX file "$mount_point" as alias
+set backgroundFile to POSIX file "$background_file" as alias
+
 tell application "Finder"
-    tell disk "MonkeyDeskPets"
-        open
-        set current view of container window to icon view
-        set toolbar visible of container window to false
-        set statusbar visible of container window to false
-        set pathbar visible of container window to false
-        set bounds of container window to {120, 120, 760, 520}
-        set theViewOptions to the icon view options of container window
-        set arrangement of theViewOptions to not arranged
-        set icon size of theViewOptions to 96
-        set text size of theViewOptions to 14
-        set background picture of theViewOptions to file ".background:installer-background.png"
-        set position of item "MonkeyDeskPets.app" of container window to {160, 220}
-        set position of item "Applications" of container window to {480, 220}
-        update without registering applications
-        delay 2
-        close
-    end tell
+    open dmgFolder
+    delay 1
+    set dmgWindow to container window of dmgFolder
+    set current view of dmgWindow to icon view
+    set toolbar visible of dmgWindow to false
+    set statusbar visible of dmgWindow to false
+    set pathbar visible of dmgWindow to false
+    set bounds of dmgWindow to {120, 120, 760, 520}
+    set theViewOptions to the icon view options of dmgWindow
+    set arrangement of theViewOptions to not arranged
+    set icon size of theViewOptions to 96
+    set text size of theViewOptions to 14
+    set background picture of theViewOptions to backgroundFile
+    set position of item "MonkeyDeskPets.app" of dmgFolder to {160, 220}
+    set position of item "Applications" of dmgFolder to {480, 220}
+    update dmgFolder without registering applications
+    delay 5
+    close dmgWindow
 end tell
 APPLESCRIPT
 
 sync
+
 hdiutil detach "$mounted_device"
 mounted_device=""
+mount_point=""
+
+# Finder 可能直到磁碟卸載時才把版面寫回 .DS_Store，因此卸載後重新掛載驗證。
+verify_output="$(hdiutil attach -readonly -noverify -noautoopen "$readwrite_dmg")"
+mounted_device="$(printf '%s\n' "$verify_output" | awk '$1 ~ "^/dev/" { print $1; exit }')"
+mount_point="$(printf '%s\n' "$verify_output" | awk -F '\t' 'index($0, "/Volumes/") { print $NF; exit }')"
+
+if [[ -z "$mounted_device" || -z "$mount_point" ]]; then
+    echo "錯誤：無法重新掛載 DMG 以驗證 Finder 版面。" >&2
+    exit 1
+fi
+
+if [[ ! -f "$mount_point/.DS_Store" ]]; then
+    echo "錯誤：DMG 卸載後仍找不到 Finder 版面設定（.DS_Store）。已停止建立。" >&2
+    exit 1
+fi
+
+if [[ ! -f "$mount_point/.background/installer-background.png" ]]; then
+    echo "錯誤：DMG 驗證時找不到雙語安裝背景。" >&2
+    exit 1
+fi
+
+hdiutil detach "$mounted_device"
+mounted_device=""
+mount_point=""
 
 hdiutil convert \
     "$readwrite_dmg" \

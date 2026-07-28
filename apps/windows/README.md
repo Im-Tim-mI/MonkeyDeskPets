@@ -60,7 +60,7 @@ Arm64：
 輸出：
 
 ```text
-release\MonkeyDeskPets-Windows-win-x64-v2.7.2.zip
+release\MonkeyDeskPets-Windows-win-x64-v2.7.4.zip
 release\SHA256SUMS-Windows-win-x64.txt
 ```
 
@@ -75,7 +75,7 @@ release\SHA256SUMS-Windows-win-x64.txt
 輸出：
 
 ```text
-release\MonkeyDeskPets-Windows-win-x64-Setup-v2.7.2.exe
+release\MonkeyDeskPets-Windows-win-x64-Setup-v2.7.4.exe
 ```
 
 ## 授權

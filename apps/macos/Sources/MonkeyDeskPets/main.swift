@@ -19,7 +19,7 @@ import Vision
 
 private let characterSize = CGSize(width: 156, height: 156)
 private let petWindowSize = CGSize(width: 156, height: 167)
-private let appVersion = "2.7.2"
+private let appVersion = "2.7.4"
 private let dragPose: Pose = .hang
 
 private enum AppLanguage {

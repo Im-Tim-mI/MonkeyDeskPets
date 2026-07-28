@@ -11,7 +11,7 @@ namespace MonkeyDeskPets.Windows;
 internal sealed class AboutWindow : Window
 {
     private static string AppVersion =>
-        typeof(AboutWindow).Assembly.GetName().Version?.ToString(3) ?? "2.7.2";
+        typeof(AboutWindow).Assembly.GetName().Version?.ToString(3) ?? "2.7.4";
     private const string GitHub = "https://github.com/Im-Tim-mI";
     private const string Threads = "https://www.threads.com/@tim945_1";
     private const string Instagram = "https://www.instagram.com/tim945_1";
