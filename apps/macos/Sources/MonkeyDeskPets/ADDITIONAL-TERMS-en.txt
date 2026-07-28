@@ -18,8 +18,8 @@ derivative version must retain all of the following:
 2. The original project name "MonkeyDeskPets" and source link
    "https://github.com/Im-Tim-mI/MonkeyDeskPets";
 3. The in-app About page, author information, and the GitHub, Threads,
-   Instagram, and official Shopee store links listed in the original version,
-   or official links later designated by the copyright holder;
+   Instagram, official Shopee store, and official links listed in the
+   original version.
 4. Advertising areas, advertising display functionality, and related links
    placed in the original version by the copyright holder.
 

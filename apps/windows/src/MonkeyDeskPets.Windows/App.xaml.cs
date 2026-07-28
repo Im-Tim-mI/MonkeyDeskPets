@@ -8,10 +8,11 @@
 //
 
 using System.Windows;
+using WpfApplication = System.Windows.Application;
 
 namespace MonkeyDeskPets.Windows;
 
-public partial class App : Application
+public partial class App : WpfApplication
 {
     private DesktopPetController? controller;
 

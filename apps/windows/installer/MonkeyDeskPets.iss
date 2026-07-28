@@ -15,7 +15,6 @@ UninstallDisplayIcon={app}\MonkeyDeskPets.exe
 OutputDir={#OutputDir}
 OutputBaseFilename=MonkeyDeskPets-Windows-{#Runtime}-Setup-v{#AppVersion}
 SetupIconFile={#SourcePath}\..\src\MonkeyDeskPets.Windows\Assets\MonkeyDeskPets.ico
-LicenseFile={#SourcePath}\..\..\..\LICENSE
 Compression=lzma2
 SolidCompression=yes
 WizardStyle=modern
@@ -25,8 +24,8 @@ PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
 
 [Languages]
-Name: "english"; MessagesFile: "compiler:Default.isl"
-Name: "chinesetraditional"; MessagesFile: "compiler:Languages\ChineseTraditional.isl"
+Name: "english"; MessagesFile: "compiler:Default.isl"; LicenseFile: "{#SourcePath}\LICENSE-en.txt"
+Name: "chinesetraditional"; MessagesFile: "{#SourcePath}\ChineseTraditional.isl"; LicenseFile: "{#SourcePath}\LICENSE-zh-TW.txt"
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"

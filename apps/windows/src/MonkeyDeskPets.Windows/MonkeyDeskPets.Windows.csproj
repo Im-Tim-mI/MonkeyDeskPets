@@ -6,11 +6,16 @@
     <UseWindowsForms>true</UseWindowsForms>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
     <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
+    <!--
+      WPF 與 Windows Forms 同時啟用時，SDK 的隱含 using 會匯入兩套 UI
+      命名空間，造成 Image、Button、Point、Brushes 等型別名稱衝突。
+      改由 GlobalUsings.cs 僅匯入不衝突的基礎命名空間。
+    -->
+    <ImplicitUsings>disable</ImplicitUsings>
     <ApplicationIcon>Assets\MonkeyDeskPets.ico</ApplicationIcon>
     <AssemblyName>MonkeyDeskPets</AssemblyName>
     <RootNamespace>MonkeyDeskPets.Windows</RootNamespace>
-    <Version>2.7.4</Version>
+    <Version>0.3.0</Version>
     <Authors>廷廷小教室、廷廷的家（Tim945）</Authors>
     <Copyright>Copyright © 2026 廷廷小教室、廷廷的家（Tim945）</Copyright>
   </PropertyGroup>

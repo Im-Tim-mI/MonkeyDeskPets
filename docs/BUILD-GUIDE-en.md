@@ -19,22 +19,22 @@ cd MonkeyDeskPets
 ```
 
 Alternatively, select `Code` → `Download ZIP` on GitHub and extract it. Run
-the commands below from the project root containing `VERSION`, `apps`, and
-`shared`.
+the commands below from the project root containing `apps` and `shared`.
+macOS and Windows use `apps/macos/VERSION` and `apps/windows/VERSION`
+respectively.
 
 ## 2. Project layout
 
 ```text
 MonkeyDeskPets/
 ├── apps/
-│   ├── macos/                 # Swift / AppKit
-│   └── windows/               # C# / WPF
+│   ├── macos/                 # Swift / AppKit with its own VERSION
+│   └── windows/               # C# / WPF with its own VERSION
 ├── shared/assets/             # Shared sprites, author, ad, and icons
 ├── docs/                      # Manuals
 ├── release/                   # Generated builds; not committed
 ├── LICENSE
-├── NOTICE
-└── VERSION
+└── NOTICE
 ```
 
 Do not remove `LICENSE`, `NOTICE`, the additional terms, author information,
@@ -136,7 +136,7 @@ The script automatically:
 6. Arranges the drag-to-install icons.
 7. Creates the compressed DMG and SHA-256 file.
 
-The version is read from the root `VERSION` file:
+The version is read from `apps/macos/VERSION`:
 
 ```text
 release/MonkeyDeskPets-macOS-v<version>.dmg
@@ -229,7 +229,7 @@ MonkeyDeskPets is a menu-bar app. Look for `🐒` at the upper-right of the scre
 - Windows 10 version 1809 or newer, or Windows 11
 - [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
 - PowerShell 5.1 or PowerShell 7
-- Visual Studio 2022 with the **.NET desktop development** workload recommended
+- Visual Studio 2026 with the **.NET desktop development** workload recommended
 - [Inno Setup 6](https://jrsoftware.org/isdl.php) for installer creation
 
 Open a new PowerShell window after installing the SDK:
@@ -296,7 +296,8 @@ inside a ZIP preview window.
 
 ## 12. Build the bilingual Windows installer
 
-After installing Inno Setup 6:
+The version is read automatically from `apps/windows/VERSION`. The current
+Windows version is `0.3.0`. After installing Inno Setup 6:
 
 ```powershell
 cd apps\windows
@@ -315,7 +316,7 @@ If a portable build does not exist, the installer script first runs
 Output:
 
 ```text
-release\MonkeyDeskPets-Windows-win-x64-Setup-v<version>.exe
+release\MonkeyDeskPets-Windows-win-x64-Setup-v0.3.0.exe
 release\SHA256SUMS-Windows-win-x64-Setup.txt
 ```
 
@@ -324,11 +325,55 @@ The installer includes:
 - Traditional Chinese and English UI
 - Monkey application and installer icons
 - Start menu shortcut
-- Optional desktop shortcut
+- Desktop launch shortcut, selected by default and optional to the user
 - Optional start-with-Windows setting
 - Uninstaller
 
+### Complete packaging procedure
+
+1. Confirm that `apps/windows/VERSION` and the `.csproj` version are both
+   `0.3.0`.
+2. Run **Clean Solution** and **Rebuild Solution** in Visual Studio 2026.
+3. Close every running MonkeyDeskPets process.
+4. Open PowerShell at the repository root.
+5. Run:
+
+```powershell
+Set-ExecutionPolicy -Scope Process Bypass
+.\apps\windows\scripts\build-installer.ps1 -Runtime win-x64
+```
+
+6. Run `release\MonkeyDeskPets-Windows-win-x64-Setup-v0.3.0.exe`.
+7. Test both the Traditional Chinese and English installer UI.
+8. Keep **Create a desktop shortcut** selected, finish installation, and
+   launch the App from the desktop.
+9. Verify the notification-area icon, menu, About-page version, and
+   uninstaller.
+10. Upload the Setup EXE and matching SHA-256 file to the Windows Release.
+
+### Git upload filtering
+
+The root `.gitignore` excludes `.vs`, `bin`, `obj`, `dist`, `release`, `.exe`,
+`.dmg`, `.zip`, generated SHA-256 files, and local secrets. Before committing:
+
+```powershell
+git status
+git check-ignore -v .\release\MonkeyDeskPets-Windows-win-x64-Setup-v0.3.0.exe
+```
+
+The installer should be ignored. `.cs`, `.csproj`, `.iss`, `.ps1`, license,
+and documentation files should remain available to commit.
+
 ## 13. Common Windows build problems
+
+### PowerShell displays mojibake and reports `UnexpectedToken`
+
+Legacy Windows PowerShell 5.1 may interpret a UTF-8 file without BOM as the
+system ANSI code page. In project version `0.3.0`, all `.ps1` source files are
+ASCII-only and the Traditional Chinese and English instructions are separate
+UTF-8 text files. If text such as `摰` still appears, an older script is being
+used. Download the latest complete package and replace
+`apps/windows/scripts` entirely.
 
 ### PowerShell blocks script execution
 
@@ -354,6 +399,49 @@ Install Inno Setup 6. Its default path is usually:
 ```text
 C:\Program Files (x86)\Inno Setup 6\ISCC.exe
 ```
+
+### `ChineseTraditional.isl` cannot be found
+
+The Traditional Chinese language file is bundled at
+`apps\windows\installer\ChineseTraditional.isl`. It does not need to be
+installed in the Inno Setup program directory. If the error still points to:
+
+```text
+C:\Program Files (x86)\Inno Setup 6\Languages\ChineseTraditional.isl
+```
+
+you are using an older `MonkeyDeskPets.iss`. Download the latest complete
+project or confirm that its `[Languages]` entry is:
+
+```ini
+Name: "chinesetraditional"; MessagesFile: "{#SourcePath}\ChineseTraditional.isl"
+```
+
+The current `build-installer.ps1` also stops immediately when the Inno Setup
+compiler fails instead of attempting to hash a missing installer.
+
+### Installer license-page language
+
+The installer loads the license page matching the language selected by the
+user:
+
+- Traditional Chinese: `apps\windows\installer\LICENSE-zh-TW.txt`
+- English: `apps\windows\installer\LICENSE-en.txt`
+
+Both installer summaries refer to the complete license documents installed
+with the application.
+
+### PowerShell reports a `profile.ps1` error before the build
+
+That error comes from the user's PowerShell profile and is unrelated to
+MonkeyDeskPets. Run PowerShell without the personal profile:
+
+```powershell
+powershell.exe -NoProfile
+```
+
+To repair the profile, open it with `notepad $PROFILE` and inspect its first
+line for invalid text.
 
 ### Windows SmartScreen warning
 
@@ -415,11 +503,15 @@ SHA256SUMS-Windows-win-x64-Setup.txt
 
 If Arm64 is supported in the release, add the equivalent `win-arm64` files.
 
-The GitHub Release tag, title, `VERSION`, App version, and filenames must match:
+Release each platform separately. Its tag, title, platform `VERSION`, App
+version, and filenames must match:
 
 ```text
-Tag: v2.7.4
-Title: MonkeyDeskPets v2.7.4
+macOS Tag: macos-v2.7.4
+macOS Title: MonkeyDeskPets macOS v2.7.4
+
+Windows Tag: windows-v0.3.0
+Windows Title: MonkeyDeskPets Windows v0.3.0
 ```
 
 ## 16. Verify SHA-256
@@ -433,7 +525,7 @@ shasum -a 256 release/MonkeyDeskPets-macOS-v2.7.4.dmg
 Windows:
 
 ```powershell
-Get-FileHash .\release\MonkeyDeskPets-Windows-win-x64-v2.7.4.zip -Algorithm SHA256
+Get-FileHash .\release\MonkeyDeskPets-Windows-win-x64-v0.3.0.zip -Algorithm SHA256
 ```
 
 The result must exactly match the corresponding `SHA256SUMS` file.
@@ -441,7 +533,8 @@ The result must exactly match the corresponding `SHA256SUMS` file.
 ## 17. Pre-release checklist
 
 - [ ] `git status` contains no accidentally omitted changes.
-- [ ] `VERSION` matches the application version.
+- [ ] `apps/macos/VERSION` matches the macOS application version.
+- [ ] `apps/windows/VERSION` matches the Windows application version.
 - [ ] The macOS App and DMG launch in a clean user account.
 - [ ] The Windows ZIP and Setup installer launch on a test PC.
 - [ ] The monkey application icon is displayed.

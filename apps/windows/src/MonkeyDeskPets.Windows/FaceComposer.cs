@@ -2,6 +2,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using WpfPoint = System.Windows.Point;
 
 namespace MonkeyDeskPets.Windows;
 
@@ -239,7 +240,7 @@ internal static class FaceComposer
                     target.NormalizedRect.Width * width,
                     target.NormalizedRect.Height * height
                 );
-                var center = new Point(rectangle.X + rectangle.Width / 2, rectangle.Y + rectangle.Height / 2);
+                var center = new WpfPoint(rectangle.X + rectangle.Width / 2, rectangle.Y + rectangle.Height / 2);
                 drawing.PushTransform(new RotateTransform(
                     -target.AngleRadians * 180 / Math.PI,
                     center.X,

@@ -54,7 +54,8 @@ internal static class WindowObstacles
                 return true;
             var width = rectangle.Right - rectangle.Left;
             var height = rectangle.Bottom - rectangle.Top;
-            if (width > 80 && height > 40)
+            // 與 macOS 版相同：忽略過小的浮動面板與系統碎片視窗。
+            if (width > 120 && height > 80)
                 result.Add(new Rect(rectangle.Left, rectangle.Top, width, height));
             return true;
         }, 0);

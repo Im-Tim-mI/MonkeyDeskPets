@@ -3,12 +3,15 @@ set -euo pipefail
 
 macos_dir="$(cd "$(dirname "$0")/.." && pwd)"
 repository_root="$(cd "$macos_dir/../.." && pwd)"
-version="$(tr -d '[:space:]' < "$repository_root/VERSION")"
+version="$(tr -d '[:space:]' < "$macos_dir/VERSION")"
 release_dir="$repository_root/release"
 app_path="$macos_dir/dist/MonkeyDeskPets.app"
 icon_path="$macos_dir/.build/icon-generation/MonkeyDeskPets.icns"
 background_path="$macos_dir/.build/dmg-background/installer-background.png"
 dmg_path="$release_dir/MonkeyDeskPets-macOS-v${version}.dmg"
+
+echo "安裝程式平台：macOS"
+echo "安裝程式版本：$version"
 
 "$macos_dir/scripts/build-app.sh" release
 swift "$macos_dir/scripts/generate-dmg-background.swift" "$background_path"

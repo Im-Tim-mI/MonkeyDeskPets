@@ -1,17 +1,22 @@
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using WpfImage = System.Windows.Controls.Image;
+using WpfPanel = System.Windows.Controls.Panel;
 
 namespace MonkeyDeskPets.Windows;
 
 internal sealed class AboutWindow : Window
 {
     private static string AppVersion =>
-        typeof(AboutWindow).Assembly.GetName().Version?.ToString(3) ?? "2.7.4";
+        typeof(AboutWindow).Assembly
+            .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
+            .InformationalVersion.Split('+')[0] ?? "0.3.0";
     private const string GitHub = "https://github.com/Im-Tim-mI";
     private const string Threads = "https://www.threads.com/@tim945_1";
     private const string Instagram = "https://www.instagram.com/tim945_1";
@@ -103,7 +108,7 @@ internal sealed class AboutWindow : Window
         stack.Children.Add(terms);
     }
 
-    private static Image LoadImage(string name)
+    private static WpfImage LoadImage(string name)
     {
         var path = Path.Combine(AppContext.BaseDirectory, "Assets", name);
         var image = new BitmapImage();
@@ -112,10 +117,10 @@ internal sealed class AboutWindow : Window
         image.UriSource = new Uri(path);
         image.EndInit();
         image.Freeze();
-        return new Image { Source = image };
+        return new WpfImage { Source = image };
     }
 
-    private static void AddLink(Panel panel, string label, string url)
+    private static void AddLink(WpfPanel panel, string label, string url)
     {
         var row = new StackPanel
         {

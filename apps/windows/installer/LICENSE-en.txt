@@ -1,0 +1,77 @@
+MonkeyDeskPets Noncommercial License 1.0
+Based on PolyForm Noncommercial License 1.0.0
+
+Copyright © 2026 廷廷小教室、廷廷的家（Tim945）
+
+Please read these terms carefully. By continuing the installation, you agree
+to comply with the MonkeyDeskPets Noncommercial License 1.0, the PolyForm
+Noncommercial License 1.0.0, the Additional Terms, and NOTICE.
+
+1. Noncommercial use
+
+This software is licensed only for noncommercial purposes. The software or a
+derivative version may not be used commercially without the copyright
+holder's prior written permission.
+
+2. Modification and distribution
+
+You may use, modify, reproduce, and distribute the software only in compliance
+with the complete license. The complete license documents and NOTICE must be
+provided whenever the software or a derivative version is distributed.
+
+3. Advertising and author-information retention
+
+Anyone who uses, modifies, reproduces, or distributes this software or a
+derivative version must retain all of the following:
+
+1. The author name "廷廷小教室、廷廷的家（Tim945）";
+2. The original project name "MonkeyDeskPets" and source link:
+   https://github.com/Im-Tim-mI/MonkeyDeskPets
+3. The in-app About page, author information, and the GitHub, Threads,
+   Instagram, official Shopee store, and official links listed in the
+   original version.
+4. Advertising areas, advertising display functionality, and related links
+   placed in the original version by the copyright holder.
+
+Without the copyright holder's prior written consent, the items above may not
+be removed, hidden, obscured, disabled, bypassed, replaced, or altered.
+
+The advertising presentation may be adjusted for compatibility, layout, or
+bug fixes, but it must remain identifiable, operable, and substantively
+visible.
+
+When a derivative version is publicly released or distributed, it must use
+the latest official promotional content published by the copyright holder in
+the official project repository as of that release date. Previously published
+versions do not need to be retroactively updated solely because that content
+later changes. A new, updated, or repackaged derivative release must use the
+latest content as of its own release date.
+
+Advertising content and links are designated by the copyright holder. Third
+parties may not replace them with their own advertisements, trackers, or
+revenue-generating content. Displaying the designated promotional content
+solely to comply with these terms does not by itself constitute commercial use
+by the licensee.
+
+4. Complete license documents
+
+The complete license consists of the following documents installed with the
+application:
+
+1. LICENSE.txt
+2. POLYFORM-NONCOMMERCIAL-1.0.0.txt
+3. ADDITIONAL-TERMS-en.txt
+4. ADDITIONAL-TERMS-zh-TW.txt
+5. NOTICE.txt
+
+This English text is provided for accessibility. If it differs from the
+Traditional Chinese Additional Terms, the Traditional Chinese text controls.
+If this installer summary differs from the complete license documents, the
+complete license documents control.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED. TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE AUTHORS OR COPYRIGHT
+HOLDERS SHALL NOT BE LIABLE FOR CLAIMS, DAMAGES, OR OTHER LIABILITY ARISING
+FROM THE SOFTWARE OR ITS USE.
+
+Copyright © 2026 廷廷小教室、廷廷的家（Tim945）

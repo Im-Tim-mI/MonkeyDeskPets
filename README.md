@@ -1,6 +1,12 @@
 # 桌面猴群 MonkeyDeskPets
 
-目前版本：**2.7.4**
+目前平台版本：
+
+- **macOS：2.7.4（正式版）**
+- **Windows：0.3.0**
+
+兩個平台各自使用 `apps/macos/VERSION` 與 `apps/windows/VERSION`，後續可
+獨立更新，不再共用同一個版本號。
 
 作者：**廷廷小教室、廷廷的家（Tim945）**
 
@@ -22,13 +28,12 @@ macOS 版本啟動後，多個人物分身會用四肢爬行、跳躍、攀爬�
 ```text
 MonkeyDeskPets/
 ├── apps/
-│   ├── macos/       # 目前可建置的 Swift／AppKit 版本
-│   └── windows/     # C#／WPF Windows 10/11 版本
+│   ├── macos/       # Swift／AppKit；版本位於 apps/macos/VERSION
+│   └── windows/     # C#／WPF；版本位於 apps/windows/VERSION
 ├── shared/
 │   └── assets/      # 跨平台共用精靈圖、作者圖片及廣告
 ├── LICENSE
-├── NOTICE
-└── VERSION
+└── NOTICE
 ```
 
 ## 功能
@@ -127,7 +132,19 @@ cd apps\windows
 
 Windows 版已包含通知區選單、多人分身、拖曳、餵食、喊爸、爆炸退場、
 4×2 精靈圖上傳、綠幕透明化、懶人模式臉部自動裁切與套圖、一般視窗
-邊緣碰撞及完整關於／授權頁。臉部辨識與精靈圖生成均在本機完成。
+邊緣碰撞及完整關於／授權頁。Windows `0.3.0` 已以 macOS 版的 60 FPS
+狀態機、11／17 秒行為週期、重力、餵食及喊爸流程重新規劃。臉部辨識與
+精靈圖生成均在本機完成。
+
+Windows 發行檔會依 `apps/windows/VERSION` 命名，例如：
+
+```text
+release\MonkeyDeskPets-Windows-win-x64-v0.3.0.zip
+release\MonkeyDeskPets-Windows-win-x64-Setup-v0.3.0.exe
+```
+
+建議 GitHub Release 分別使用 `macos-v2.7.4` 與
+`windows-v0.3.0` 標籤。
 
 ## macOS 權限
 

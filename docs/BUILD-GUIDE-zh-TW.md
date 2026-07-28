@@ -18,21 +18,21 @@ cd MonkeyDeskPets
 ```
 
 也可以在 GitHub 按 `Code` → `Download ZIP`。解壓後，後續指令都必須在
-包含 `VERSION`、`apps`、`shared` 的專案根目錄執行。
+包含 `apps`、`shared` 的專案根目錄執行。macOS 與 Windows 分別使用
+`apps/macos/VERSION` 與 `apps/windows/VERSION`。
 
 ## 2. 專案目錄
 
 ```text
 MonkeyDeskPets/
 ├── apps/
-│   ├── macos/                 # Swift／AppKit
-│   └── windows/               # C#／WPF
+│   ├── macos/                 # Swift／AppKit，含獨立 VERSION
+│   └── windows/               # C#／WPF，含獨立 VERSION
 ├── shared/assets/             # 共用精靈、作者、廣告與圖示
 ├── docs/                      # 手冊
 ├── release/                   # 建置後產生，不提交 Git
 ├── LICENSE
-├── NOTICE
-└── VERSION
+└── NOTICE
 ```
 
 不可刪除 `LICENSE`、`NOTICE`、附加條款、作者資訊、官方連結及推廣區域。
@@ -133,7 +133,7 @@ chmod +x apps/macos/scripts/*.sh
 6. 排列拖曳安裝圖示。
 7. 建立壓縮 DMG 與 SHA-256。
 
-輸出檔名會自動讀取根目錄 `VERSION`：
+輸出檔名會自動讀取 `apps/macos/VERSION`：
 
 ```text
 release/MonkeyDeskPets-macOS-v<版本>.dmg
@@ -221,7 +221,7 @@ MonkeyDeskPets 是選單列程式。請查看畫面右上方的 `🐒`，不是 
 - Windows 10 版本 1809 或更新版本，或 Windows 11
 - [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
 - PowerShell 5.1 或 PowerShell 7
-- 建議使用 Visual Studio 2022，工作負載勾選「.NET 桌面開發」
+- 建議使用 Visual Studio 2026，工作負載勾選「.NET 桌面開發」
 - 建立安裝程式時需安裝 [Inno Setup 6](https://jrsoftware.org/isdl.php)
 
 安裝後開啟新的 PowerShell：
@@ -281,6 +281,7 @@ ZIP 必須完整解壓後再執行 `MonkeyDeskPets.exe`，不要直接在壓縮�
 
 ## 12. 建立 Windows 中英雙語安裝程式
 
+版本會自動讀取 `apps/windows/VERSION`。目前 Windows 版本為 `0.3.0`。
 安裝 Inno Setup 6 後：
 
 ```powershell
@@ -297,7 +298,7 @@ Arm64：
 如果尚未建立可攜式版本，安裝腳本會先呼叫 `build-release.ps1`。輸出：
 
 ```text
-release\MonkeyDeskPets-Windows-win-x64-Setup-v<版本>.exe
+release\MonkeyDeskPets-Windows-win-x64-Setup-v0.3.0.exe
 release\SHA256SUMS-Windows-win-x64-Setup.txt
 ```
 
@@ -306,11 +307,50 @@ release\SHA256SUMS-Windows-win-x64-Setup.txt
 - 繁體中文與英文介面
 - 猴子應用程式及安裝程式圖示
 - 開始功能表捷徑
-- 可選桌面捷徑
+- 桌面啟動捷徑（安裝時預設勾選，使用者可取消）
 - 可選開機自動啟動
 - 解除安裝功能
 
+### 完整打包步驟
+
+1. 確認 `apps/windows/VERSION` 與 `.csproj` 版本均為 `0.3.0`。
+2. 在 Visual Studio 2026 執行「清除方案」及「重建方案」。
+3. 關閉正在執行的 MonkeyDeskPets。
+4. 在專案根目錄開啟 PowerShell。
+5. 執行：
+
+```powershell
+Set-ExecutionPolicy -Scope Process Bypass
+.\apps\windows\scripts\build-installer.ps1 -Runtime win-x64
+```
+
+6. 執行 `release\MonkeyDeskPets-Windows-win-x64-Setup-v0.3.0.exe`。
+7. 分別測試繁體中文與英文安裝介面。
+8. 保持「建立桌面捷徑」勾選，完成安裝並從桌面啟動。
+9. 確認通知區圖示、選單、關於頁版本及解除安裝均正常。
+10. 將 Setup EXE 與對應的 SHA-256 文件上傳至 Windows Release。
+
+### Git 上傳過濾
+
+根目錄 `.gitignore` 已排除 `.vs`、`bin`、`obj`、`dist`、`release`、
+`.exe`、`.dmg`、`.zip`、SHA-256 輸出及本機秘密設定。提交前執行：
+
+```powershell
+git status
+git check-ignore -v .\release\MonkeyDeskPets-Windows-win-x64-Setup-v0.3.0.exe
+```
+
+安裝程式應被忽略；`.cs`、`.csproj`、`.iss`、`.ps1`、授權與文件則應正常
+出現在可提交內容中。
+
 ## 13. Windows 常見錯誤
+
+### PowerShell 顯示亂碼並回報 `UnexpectedToken`
+
+舊版 Windows PowerShell 5.1 可能把 UTF-8 無 BOM 腳本誤判為系統 ANSI
+編碼。本專案 `0.3.0` 的 `.ps1` 已改為純 ASCII，繁中與英文說明改為獨立
+UTF-8 文字檔。如果仍出現 `摰` 等亂碼，代表使用的是舊腳本；請重新下載
+最新版完整包並覆蓋整個 `apps/windows/scripts`。
 
 ### PowerShell 禁止執行腳本
 
@@ -335,6 +375,45 @@ dotnet --info
 ```text
 C:\Program Files (x86)\Inno Setup 6\ISCC.exe
 ```
+
+### 找不到 `ChineseTraditional.isl`
+
+本專案已在 `apps\windows\installer\ChineseTraditional.isl` 內附繁體中文
+語言檔，不需要把語言檔另外放進 Inno Setup 的安裝目錄。如果錯誤仍指向：
+
+```text
+C:\Program Files (x86)\Inno Setup 6\Languages\ChineseTraditional.isl
+```
+
+代表目前使用的是舊版 `MonkeyDeskPets.iss`。請重新下載最新版完整專案，
+或確認 `[Languages]` 中的繁中設定是：
+
+```ini
+Name: "chinesetraditional"; MessagesFile: "{#SourcePath}\ChineseTraditional.isl"
+```
+
+新版 `build-installer.ps1` 也會在 Inno Setup 編譯失敗後立即停止，不會再
+繼續雜湊一個不存在的安裝程式。
+
+### 安裝程式授權頁語言
+
+安裝程式會依使用者在語言選擇畫面選取的語言載入授權頁：
+
+- 繁體中文：`apps\windows\installer\LICENSE-zh-TW.txt`
+- English：`apps\windows\installer\LICENSE-en.txt`
+
+兩份安裝摘要均會指向隨程式安裝的完整授權文件。
+
+### PowerShell 啟動時先出現 `profile.ps1` 錯誤
+
+這是使用者 PowerShell 設定檔的錯誤，與 MonkeyDeskPets 無關。可以先用
+不載入個人設定檔的 PowerShell 執行：
+
+```powershell
+powershell.exe -NoProfile
+```
+
+若要修正設定檔，可用 `notepad $PROFILE` 檢查第一行的無效文字。
 
 ### Windows SmartScreen 警告
 
@@ -393,11 +472,14 @@ SHA256SUMS-Windows-win-x64-Setup.txt
 
 如果提供 Arm64，再加入相同名稱的 `win-arm64` 檔案。
 
-GitHub Release 的 Tag、標題、`VERSION`、App 版本和檔名必須一致，例如：
+兩個平台分開發行。Tag、標題、平台 `VERSION`、App 版本和檔名必須一致：
 
 ```text
-Tag: v2.7.4
-Title: MonkeyDeskPets v2.7.4
+macOS Tag: macos-v2.7.4
+macOS Title: MonkeyDeskPets macOS v2.7.4
+
+Windows Tag: windows-v0.3.0
+Windows Title: MonkeyDeskPets Windows v0.3.0
 ```
 
 ## 16. SHA-256 驗證
@@ -411,7 +493,7 @@ shasum -a 256 release/MonkeyDeskPets-macOS-v2.7.4.dmg
 Windows：
 
 ```powershell
-Get-FileHash .\release\MonkeyDeskPets-Windows-win-x64-v2.7.4.zip -Algorithm SHA256
+Get-FileHash .\release\MonkeyDeskPets-Windows-win-x64-v0.3.0.zip -Algorithm SHA256
 ```
 
 結果必須和對應的 `SHA256SUMS` 文件完全一致。
@@ -419,7 +501,8 @@ Get-FileHash .\release\MonkeyDeskPets-Windows-win-x64-v2.7.4.zip -Algorithm SHA2
 ## 17. 發布前檢查表
 
 - [ ] `git status` 沒有意外遺漏的修改。
-- [ ] `VERSION` 與程式版本一致。
+- [ ] `apps/macos/VERSION` 與 macOS 程式版本一致。
+- [ ] `apps/windows/VERSION` 與 Windows 程式版本一致。
 - [ ] macOS App／DMG 可在乾淨帳號啟動。
 - [ ] Windows ZIP／Setup 可在測試電腦啟動。
 - [ ] 猴子應用程式圖示正常。

@@ -16,7 +16,7 @@ PolyForm Noncommercial License 1.0.0、本附加條款及 NOTICE。
 2. 原始專案名稱「MonkeyDeskPets」與出處連結
    「https://github.com/Im-Tim-mI/MonkeyDeskPets」；
 3. 程式內的「關於」頁面、作者資訊，以及原始版本所列的
-   GitHub、Threads、Instagram、蝦皮官方商店或其後由著作權人指定的官方連結；
+   GitHub、Threads、Instagram、蝦皮官方商店 及 官方連結。
 4. 原始版本內由著作權人設置的廣告區域、廣告顯示功能及相關連結。
 
 未經著作權人事先書面同意，不得刪除、隱藏、遮蔽、停用、
