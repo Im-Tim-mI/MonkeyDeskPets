@@ -1,15 +1,18 @@
 # 桌面猴群 MonkeyDeskPets
 
-目前版本：**2.6.0**
+目前版本：**2.7.2**
 
-作者：**廷廷小教室（Tim945）**
+作者：**廷廷小教室、廷廷的家（Tim945）**
 
 - [GitHub](https://github.com/Im-Tim-mI)
 - [Threads](https://www.threads.com/@tim945_1)
 - [Instagram](https://www.instagram.com/tim945_1)
+- [作者官方商店（蝦皮）](https://shopee.tw/rr901037)
+- [macOS／Windows 完整編譯與發行手冊（繁體中文）](docs/BUILD-GUIDE-zh-TW.md)
+- [macOS / Windows Build & Release Guide (English)](docs/BUILD-GUIDE-en.md)
 
-MonkeyDeskPets 是桌面寵物專案。目前提供原生 macOS 版本，Windows 版本的
-目錄、共用素材規格及授權要求已預留，但尚未提供可執行的 Windows 程式。
+MonkeyDeskPets 是跨平台桌面寵物專案，目前提供原生 macOS 版本與使用
+C#／WPF 製作的 Windows 版本。
 
 macOS 版本啟動後，多個人物分身會用四肢爬行、跳躍、攀爬、懸掛、休息及睡覺，
 並把螢幕和一般應用程式視窗邊緣當成活動邊界。
@@ -20,7 +23,7 @@ macOS 版本啟動後，多個人物分身會用四肢爬行、跳躍、攀爬�
 MonkeyDeskPets/
 ├── apps/
 │   ├── macos/       # 目前可建置的 Swift／AppKit 版本
-│   └── windows/     # 未來 Windows 版本預留規格
+│   └── windows/     # C#／WPF Windows 10/11 版本
 ├── shared/
 │   └── assets/      # 跨平台共用精靈圖、作者圖片及廣告
 ├── LICENSE
@@ -62,6 +65,9 @@ MonkeyDeskPets/
   偵測最大臉部，套入內建角色的 8 個動作位置，生成透明 4×2 圖、拆分並
   立即套用；臉部照片不會上傳網路
 - 僅在選單列顯示 `🐒`，不佔用 Dock
+- App 與 DMG 掛載磁碟使用 MonkeyDeskPets 原創猴子圖示
+- DMG 開啟後以繁體中文與英文提示將 MonkeyDeskPets 拖入 Applications，
+  並以箭頭與自動排列的圖示引導安裝
 
 ## macOS 系統需求
 
@@ -79,6 +85,17 @@ chmod +x apps/macos/scripts/*.sh
 open apps/macos/dist/MonkeyDeskPets.app
 ```
 
+建立含猴子磁碟圖示的 DMG 與 SHA-256：
+
+```bash
+chmod +x apps/macos/scripts/*.sh
+./apps/macos/scripts/build-dmg.sh
+open release
+```
+
+輸出為 `release/MonkeyDeskPets-macOS-v2.7.2.dmg` 與
+`release/SHA256SUMS.txt`。
+
 也可以直接開發執行：
 
 ```bash
@@ -87,11 +104,30 @@ cd apps/macos
 swift run
 ```
 
-## Windows 狀態
+## Windows 建置
 
-`apps/windows/` 目前只包含未來實作規格，不含假程式、空白執行檔或未完成安裝包。
-Windows 版本建立後，必須使用 `shared/assets/` 的共用素材、相同語系規則，以及
-根目錄的完整 MonkeyDeskPets Noncommercial License 1.0。
+Windows 10 版本 1809 以上或 Windows 11 安裝 .NET 8 SDK 後，在 PowerShell：
+
+```powershell
+cd apps\windows
+.\scripts\run-debug.ps1
+```
+
+建立 x64 自包含單檔發行 ZIP：
+
+```powershell
+.\scripts\build-release.ps1 -Runtime win-x64
+```
+
+安裝 Inno Setup 6 後可建立中英文安裝程式：
+
+```powershell
+.\scripts\build-installer.ps1 -Runtime win-x64
+```
+
+Windows 版已包含通知區選單、多人分身、拖曳、餵食、喊爸、爆炸退場、
+4×2 精靈圖上傳、綠幕透明化、懶人模式臉部自動裁切與套圖、一般視窗
+邊緣碰撞及完整關於／授權頁。臉部辨識與精靈圖生成均在本機完成。
 
 ## macOS 權限
 
@@ -109,8 +145,9 @@ Windows 版本建立後，必須使用 `shared/assets/` 的共用素材、相同
 - 增加／減少人物
 - 只保留一人：保留第一個角色，讓其他角色以爆炸圖像退場
 - 關於 MonkeyDeskPets：顯示作者圖片、版本、作者，以及垂直排列且完整顯示
-  網址的 GitHub、Threads、Instagram 連結；羅技廣告圖片與圖片下方的完整
-  商店網址皆可點擊，並可開啟完整「廣告與作者資訊保留條款」
+  網址的 GitHub、Threads、Instagram、作者蝦皮官方商店連結；羅技廣告圖片
+  與圖片下方的完整商店網址皆可點擊，並可開啟完整
+  「廣告與作者資訊保留條款」
 - 餵食：選擇後在任一螢幕點擊放置狗糧，最近的角色會前往；進食時固定使用
   編號 1，朝狗糧方向前後往復約 2.4 秒
 - 上傳精靈圖：選擇一張 4×2 圖片，自動拆解、保存並立即套用

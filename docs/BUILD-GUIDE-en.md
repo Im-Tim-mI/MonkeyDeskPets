@@ -1,0 +1,467 @@
+# MonkeyDeskPets macOS and Windows Build & Release Guide
+
+This guide applies to MonkeyDeskPets 2.7.x. It explains how to run the source,
+build both platforms, and prepare files for a GitHub Release.
+
+Author: **廷廷小教室、廷廷的家（Tim945）**
+
+> A macOS App or DMG must be built on macOS. A Windows EXE or installer must
+> be built on Windows. Run and test the development build on the target
+> platform before creating release files.
+
+## 1. Download the project
+
+### With Git
+
+```bash
+git clone https://github.com/Im-Tim-mI/MonkeyDeskPets.git
+cd MonkeyDeskPets
+```
+
+Alternatively, select `Code` → `Download ZIP` on GitHub and extract it. Run
+the commands below from the project root containing `VERSION`, `apps`, and
+`shared`.
+
+## 2. Project layout
+
+```text
+MonkeyDeskPets/
+├── apps/
+│   ├── macos/                 # Swift / AppKit
+│   └── windows/               # C# / WPF
+├── shared/assets/             # Shared sprites, author, ad, and icons
+├── docs/                      # Manuals
+├── release/                   # Generated builds; not committed
+├── LICENSE
+├── NOTICE
+└── VERSION
+```
+
+Do not remove `LICENSE`, `NOTICE`, the additional terms, author information,
+official links, or promotional area.
+
+---
+
+# Building for macOS
+
+## 3. macOS requirements
+
+- macOS 13 Ventura or newer
+- Xcode 15 or newer
+- A Swift 5.9-compatible toolchain
+- About 3 GB of free space
+- Apple Silicon or Intel Mac
+
+After installing Xcode, open it once and accept its license. Then run:
+
+```bash
+xcode-select -p
+swift --version
+```
+
+If command-line tools are missing:
+
+```bash
+xcode-select --install
+```
+
+If several Xcode versions are installed:
+
+```bash
+sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+```
+
+## 4. Run the macOS development build
+
+From the project root:
+
+```bash
+chmod +x apps/macos/scripts/*.sh
+cd apps/macos
+./scripts/sync-shared-resources.sh
+swift run
+```
+
+To use Xcode:
+
+1. Open Xcode.
+2. Select `File` → `Open`.
+3. Open `apps/macos/Package.swift`.
+4. Select the `MonkeyDeskPets` scheme.
+5. Select `My Mac` as the run destination.
+6. Press `▶ Run`.
+
+MonkeyDeskPets does not appear in the Dock. Look for `🐒` in the macOS menu bar.
+
+## 5. Build the macOS App
+
+From the project root:
+
+```bash
+chmod +x apps/macos/scripts/*.sh
+./apps/macos/scripts/build-app.sh release
+```
+
+Output:
+
+```text
+apps/macos/dist/MonkeyDeskPets.app
+```
+
+Test it:
+
+```bash
+open apps/macos/dist/MonkeyDeskPets.app
+```
+
+An `.app` is a directory bundle, not a normal single file. For public
+distribution, create the DMG below instead of uploading the bare bundle.
+
+## 6. Build the bilingual macOS DMG
+
+From the project root:
+
+```bash
+chmod +x apps/macos/scripts/*.sh
+./apps/macos/scripts/build-dmg.sh
+```
+
+The script automatically:
+
+1. Synchronizes shared assets and license files.
+2. Builds the Release App.
+3. Generates the monkey `.icns` icon.
+4. Generates the Traditional Chinese and English DMG background.
+5. Adds `MonkeyDeskPets.app` and an `Applications` shortcut.
+6. Arranges the drag-to-install icons.
+7. Creates the compressed DMG and SHA-256 file.
+
+The version is read from the root `VERSION` file:
+
+```text
+release/MonkeyDeskPets-macOS-v<version>.dmg
+release/SHA256SUMS.txt
+```
+
+Open the output directory:
+
+```bash
+open release
+```
+
+Mount the DMG and verify:
+
+- The App and mounted disk use the monkey icon.
+- Both Traditional Chinese and English installation instructions appear.
+- The `Applications` shortcut works.
+- The App launches after being dragged to Applications.
+
+## 7. Unsigned macOS builds
+
+Without an Apple Developer ID signature, Gatekeeper may warn other users on
+first launch. In Finder, right-click the App, choose `Open`, then confirm.
+
+For a public production release, use an Apple Developer ID Application
+certificate and Apple notarization. You can inspect a signature with:
+
+```bash
+codesign --verify --deep --strict --verbose=2 \
+  apps/macos/dist/MonkeyDeskPets.app
+```
+
+The normal build scripts never store or select a developer certificate.
+
+## 8. Common macOS build problems
+
+### `Permission denied`
+
+```bash
+chmod +x apps/macos/scripts/*.sh
+```
+
+### Unhandled `Info.plist` warning
+
+The current `Package.swift` explicitly excludes the `Info.plist` handled by the
+packaging script. If the warning still appears, confirm that you downloaded the
+latest project. `build-app.sh` installs the production Info.plist in the bundle.
+
+### `awk: syntax error` or the DMG build stops after mounting
+
+An older `build-dmg.sh` over-escaped slash characters and failed with macOS BSD
+awk. Update to v2.7.2 or newer. If MonkeyDeskPets remains mounted after the old
+script fails, run:
+
+```bash
+hdiutil detach "/Volumes/MonkeyDeskPets"
+```
+
+If the volume is not found, it is already detached and you may rerun
+`build-dmg.sh`.
+
+### `Constant must be declared private`
+
+Do not keep duplicate program entry points. The bottom of the file should have
+only one set similar to:
+
+```swift
+let application = NSApplication.shared
+private let delegate = DesktopPetController()
+```
+
+If `DesktopPetController` is `private`, a global constant using it must also
+be `private`.
+
+### `Invalid redeclaration of 'application'`
+
+There are two declarations of `let application = NSApplication.shared` in the
+same scope. Delete the duplicate instead of adding another declaration.
+
+### The App runs but no main window appears
+
+MonkeyDeskPets is a menu-bar app. Look for `🐒` at the upper-right of the screen.
+
+---
+
+# Building for Windows
+
+## 9. Windows requirements
+
+- Windows 10 version 1809 or newer, or Windows 11
+- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+- PowerShell 5.1 or PowerShell 7
+- Visual Studio 2022 with the **.NET desktop development** workload recommended
+- [Inno Setup 6](https://jrsoftware.org/isdl.php) for installer creation
+
+Open a new PowerShell window after installing the SDK:
+
+```powershell
+dotnet --version
+```
+
+It should report `8.x.x`. If `dotnet` is still unavailable, restart the
+terminal or Windows.
+
+## 10. Run the Windows development build
+
+From the project root:
+
+```powershell
+Set-ExecutionPolicy -Scope Process Bypass
+cd apps\windows
+.\scripts\run-debug.ps1
+```
+
+`-Scope Process` affects only the current PowerShell window and is discarded
+when the window closes.
+
+To use Visual Studio:
+
+1. Open `apps/windows/MonkeyDeskPets.Windows.sln`.
+2. Wait for SDK restore to complete.
+3. Select the `Debug` configuration.
+4. Select `MonkeyDeskPets.Windows` as the startup project.
+5. Press `F5`.
+
+After launch, look in the Windows notification area. Select `^` if the monkey
+icon is hidden in the overflow area.
+
+## 11. Build a portable Windows ZIP
+
+### x64 for ordinary Intel or AMD PCs
+
+```powershell
+cd apps\windows
+.\scripts\build-release.ps1 -Runtime win-x64
+```
+
+### Arm64 for Windows on ARM
+
+```powershell
+cd apps\windows
+.\scripts\build-release.ps1 -Runtime win-arm64
+```
+
+The script publishes a self-contained build, so the end user does not need to
+install the .NET Runtime separately.
+
+Output:
+
+```text
+release\MonkeyDeskPets-Windows-win-x64-v<version>.zip
+release\SHA256SUMS-Windows-win-x64.txt
+```
+
+Extract the entire ZIP before running `MonkeyDeskPets.exe`. Do not launch it
+inside a ZIP preview window.
+
+## 12. Build the bilingual Windows installer
+
+After installing Inno Setup 6:
+
+```powershell
+cd apps\windows
+.\scripts\build-installer.ps1 -Runtime win-x64
+```
+
+Arm64:
+
+```powershell
+.\scripts\build-installer.ps1 -Runtime win-arm64
+```
+
+If a portable build does not exist, the installer script first runs
+`build-release.ps1`.
+
+Output:
+
+```text
+release\MonkeyDeskPets-Windows-win-x64-Setup-v<version>.exe
+release\SHA256SUMS-Windows-win-x64-Setup.txt
+```
+
+The installer includes:
+
+- Traditional Chinese and English UI
+- Monkey application and installer icons
+- Start menu shortcut
+- Optional desktop shortcut
+- Optional start-with-Windows setting
+- Uninstaller
+
+## 13. Common Windows build problems
+
+### PowerShell blocks script execution
+
+```powershell
+Set-ExecutionPolicy -Scope Process Bypass
+```
+
+Then run the script again. Do not permanently disable system-wide security
+policy just for this project.
+
+### `dotnet` is not recognized
+
+Install the **.NET 8 SDK**, not only the Runtime. Open a new PowerShell window:
+
+```powershell
+dotnet --info
+```
+
+### Inno Setup cannot be found
+
+Install Inno Setup 6. Its default path is usually:
+
+```text
+C:\Program Files (x86)\Inno Setup 6\ISCC.exe
+```
+
+### Windows SmartScreen warning
+
+A new unsigned EXE with few downloads may trigger SmartScreen. Verify the
+download source and SHA-256. For production distribution, sign the file with
+a Windows code-signing certificate.
+
+### The program starts but no window appears
+
+The Windows edition is a notification-area application. Select `^` on the
+taskbar and locate the monkey icon.
+
+### Sprite or license assets are missing
+
+Do not copy a bare EXE out of the development directory. Use the complete ZIP
+from `build-release.ps1` or the installer from `build-installer.ps1`.
+
+---
+
+# GitHub Actions and releases
+
+## 14. Automatic Windows builds on GitHub
+
+`.github/workflows/windows-build.yml` runs for:
+
+- Pushes to `main`
+- Pull requests
+- Manual GitHub Actions dispatches
+
+To inspect a build:
+
+1. Open the GitHub repository.
+2. Select `Actions`.
+3. Select `Windows Build`.
+4. Open the latest run.
+5. Confirm that `win-x64` and `win-arm64` are green.
+6. Download the Artifacts at the bottom of the run page.
+
+If a build fails, expand the red step and retain the complete error output,
+not only its final line.
+
+## 15. Recommended GitHub Release assets
+
+macOS:
+
+```text
+MonkeyDeskPets-macOS-v<version>.dmg
+SHA256SUMS.txt
+```
+
+Windows:
+
+```text
+MonkeyDeskPets-Windows-win-x64-v<version>.zip
+MonkeyDeskPets-Windows-win-x64-Setup-v<version>.exe
+SHA256SUMS-Windows-win-x64.txt
+SHA256SUMS-Windows-win-x64-Setup.txt
+```
+
+If Arm64 is supported in the release, add the equivalent `win-arm64` files.
+
+The GitHub Release tag, title, `VERSION`, App version, and filenames must match:
+
+```text
+Tag: v2.7.2
+Title: MonkeyDeskPets v2.7.2
+```
+
+## 16. Verify SHA-256
+
+macOS:
+
+```bash
+shasum -a 256 release/MonkeyDeskPets-macOS-v2.7.2.dmg
+```
+
+Windows:
+
+```powershell
+Get-FileHash .\release\MonkeyDeskPets-Windows-win-x64-v2.7.2.zip -Algorithm SHA256
+```
+
+The result must exactly match the corresponding `SHA256SUMS` file.
+
+## 17. Pre-release checklist
+
+- [ ] `git status` contains no accidentally omitted changes.
+- [ ] `VERSION` matches the application version.
+- [ ] The macOS App and DMG launch in a clean user account.
+- [ ] The Windows ZIP and Setup installer launch on a test PC.
+- [ ] The monkey application icon is displayed.
+- [ ] The menu-bar or notification-area icon is displayed.
+- [ ] Default sprites, uploads, green screen, and Easy Mode work.
+- [ ] Dragging, feeding, Dad, and pet-count controls work.
+- [ ] Traditional Chinese and English UI work.
+- [ ] The About page shows `廷廷小教室、廷廷的家（Tim945）`.
+- [ ] GitHub, Threads, Instagram, Shopee, and Logitech links are clickable.
+- [ ] License, NOTICE, additional terms, and promotional assets are preserved.
+- [ ] New SHA-256 files are generated and uploaded.
+
+## 18. License notice
+
+MonkeyDeskPets uses the MonkeyDeskPets Noncommercial License 1.0, based on the
+PolyForm Noncommercial License 1.0.0. Derivative editions must comply with
+`LICENSE`, `NOTICE`, `ADDITIONAL-TERMS-zh-TW.txt`, and all accompanying terms.
+
+Do not remove the author, original project source, About page, official links,
+or official promotional area when building or repackaging. Each new derivative
+release must use the latest official promotional content available on its
+release date. Previously released versions do not require perpetual
+retroactive advertising updates.

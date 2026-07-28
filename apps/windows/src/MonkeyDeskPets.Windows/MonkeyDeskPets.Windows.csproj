@@ -1,0 +1,45 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows10.0.17763.0</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <ApplicationIcon>Assets\MonkeyDeskPets.ico</ApplicationIcon>
+    <AssemblyName>MonkeyDeskPets</AssemblyName>
+    <RootNamespace>MonkeyDeskPets.Windows</RootNamespace>
+    <Version>2.7.2</Version>
+    <Authors>廷廷小教室、廷廷的家（Tim945）</Authors>
+    <Copyright>Copyright © 2026 廷廷小教室、廷廷的家（Tim945）</Copyright>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Update="Assets\MonkeyDeskPets.ico" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\..\..\..\shared\assets\person-sprites.png"
+             Link="Assets\person-sprites.png"
+             CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\..\..\..\shared\assets\author-avatar.png"
+             Link="Assets\author-avatar.png"
+             CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\..\..\..\shared\assets\logitech-ad.jpeg"
+             Link="Assets\logitech-ad.jpeg"
+             CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\..\..\..\LICENSE"
+             Link="Licenses\LICENSE.txt"
+             CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\..\..\..\NOTICE"
+             Link="Licenses\NOTICE.txt"
+             CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\..\..\..\ADDITIONAL-TERMS-zh-TW.txt"
+             Link="Licenses\ADDITIONAL-TERMS-zh-TW.txt"
+             CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\..\..\..\ADDITIONAL-TERMS-en.txt"
+             Link="Licenses\ADDITIONAL-TERMS-en.txt"
+             CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\..\..\..\POLYFORM-NONCOMMERCIAL-1.0.0.txt"
+             Link="Licenses\POLYFORM-NONCOMMERCIAL-1.0.0.txt"
+             CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

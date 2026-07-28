@@ -14,12 +14,12 @@ If these Additional Terms conflict with the PolyForm Noncommercial License
 Anyone who uses, modifies, reproduces, or distributes this software or a
 derivative version must retain all of the following:
 
-1. The author name "廷廷小教室（Tim945）";
+1. The author name "廷廷小教室、廷廷的家（Tim945）";
 2. The original project name "MonkeyDeskPets" and source link
    "https://github.com/Im-Tim-mI/MonkeyDeskPets";
-3. The in-app About page, author information, and the GitHub, Threads, and
-   Instagram links listed in the original version, or official links later
-   designated by the copyright holder;
+3. The in-app About page, author information, and the GitHub, Threads,
+   Instagram, and official Shopee store links listed in the original version,
+   or official links later designated by the copyright holder;
 4. Advertising areas, advertising display functionality, and related links
    placed in the original version by the copyright holder.
 
@@ -30,11 +30,20 @@ The advertising presentation may be adjusted for compatibility, layout, or
 bug fixes, but the advertising must remain identifiable, operable, and
 substantively visible.
 
+When a derivative version is publicly released or distributed, it must use the
+latest official promotional content published by the copyright holder in the
+official project repository as of that release date. After release, previously
+published versions do not need to be retroactively updated solely because the
+official promotional content later changes. A new, updated, or repackaged
+derivative release must use the latest content as of its own release date.
+
 Advertising content and links are designated by the copyright holder. Third
 parties may not replace them with their own advertisements, trackers, or
-revenue-generating content.
+revenue-generating content. Displaying designated official promotional content
+solely to comply with these terms does not by itself constitute commercial use
+of the software by the licensee.
 
-Copyright © 2026 廷廷小教室（Tim945）
+Copyright © 2026 廷廷小教室、廷廷的家（Tim945）
 
 This English translation is supplied for accessibility. If this translation
 differs from ADDITIONAL-TERMS-zh-TW.txt, the Traditional Chinese text controls.

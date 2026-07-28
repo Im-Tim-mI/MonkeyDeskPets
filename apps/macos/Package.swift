@@ -10,6 +10,7 @@ let package = Package(
     targets: [
         .executableTarget(
             name: "MonkeyDeskPets",
+            exclude: ["Info.plist"],
             resources: [
                 .copy("person-sprites.png"),
                 .copy("author-avatar.png"),

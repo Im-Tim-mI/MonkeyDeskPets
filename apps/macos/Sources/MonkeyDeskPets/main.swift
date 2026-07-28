@@ -1,6 +1,6 @@
 //
 // MonkeyDeskPets
-// Copyright © 2026 廷廷小教室（Tim945）
+// Copyright © 2026 廷廷小教室、廷廷的家（Tim945）
 //
 // Licensed under the MonkeyDeskPets Noncommercial License 1.0,
 // based on PolyForm Noncommercial License 1.0.0.
@@ -19,7 +19,7 @@ import Vision
 
 private let characterSize = CGSize(width: 156, height: 156)
 private let petWindowSize = CGSize(width: 156, height: 167)
-private let appVersion = "2.6.0"
+private let appVersion = "2.7.2"
 private let dragPose: Pose = .hang
 
 private enum AppLanguage {
@@ -53,11 +53,11 @@ PolyForm Noncommercial License 1.0.0、本附加條款及 NOTICE。
 
 任何人使用、修改、重製或散布本軟體及其衍生版本時，均必須完整保留：
 
-1. 作者名稱「廷廷小教室（Tim945）」；
+1. 作者名稱「廷廷小教室、廷廷的家（Tim945）」；
 2. 原始專案名稱「MonkeyDeskPets」與出處連結
    「https://github.com/Im-Tim-mI/MonkeyDeskPets」；
 3. 程式內的「關於」頁面、作者資訊，以及原始版本所列的
-   GitHub、Threads、Instagram 或其後由著作權人指定的官方連結；
+   GitHub、Threads、Instagram、蝦皮官方商店或其後由著作權人指定的官方連結；
 4. 原始版本內由著作權人設置的廣告區域、廣告顯示功能及相關連結。
 
 未經著作權人事先書面同意，不得刪除、隱藏、遮蔽、停用、
@@ -66,10 +66,16 @@ PolyForm Noncommercial License 1.0.0、本附加條款及 NOTICE。
 允許為相容性、版面配置或錯誤修正而調整廣告顯示方式，
 但不得使廣告難以辨識、無法操作或實質上不再顯示。
 
-廣告內容及連結由著作權人指定。第三方不得將其替換成自己的
-廣告、追蹤程式或營利內容。
+衍生版本公開發布或散布時，必須採用該發布日由著作權人於官方專案倉庫
+公布的最新版官方推廣內容。發布完成後，無須僅因官方推廣內容日後變更
+而回溯更新舊版本；但衍生版本日後發布新版、更新版或重新打包版本時，
+必須採用該次發布日的最新版官方推廣內容。
 
-Copyright © 2026 廷廷小教室（Tim945）
+廣告內容及連結由著作權人指定。第三方不得將其替換成自己的
+廣告、追蹤程式或營利內容。為遵守本條款而顯示指定的官方推廣內容，
+本身不視為被授權者對本軟體的商業使用。
+
+Copyright © 2026 廷廷小教室、廷廷的家（Tim945）
 """,
 """
 Advertising and Author Information Retention Terms
@@ -88,12 +94,12 @@ If these Additional Terms conflict with the PolyForm Noncommercial License
 Anyone who uses, modifies, reproduces, or distributes this software or a
 derivative version must retain all of the following:
 
-1. The author name "廷廷小教室（Tim945）";
+1. The author name "廷廷小教室、廷廷的家（Tim945）";
 2. The original project name "MonkeyDeskPets" and source link
    "https://github.com/Im-Tim-mI/MonkeyDeskPets";
-3. The in-app About page, author information, and the GitHub, Threads, and
-   Instagram links listed in the original version, or official links later
-   designated by the copyright holder;
+3. The in-app About page, author information, and the GitHub, Threads,
+   Instagram, and official Shopee store links listed in the original version,
+   or official links later designated by the copyright holder;
 4. Advertising areas, advertising display functionality, and related links
    placed in the original version by the copyright holder.
 
@@ -104,11 +110,20 @@ The advertising presentation may be adjusted for compatibility, layout, or
 bug fixes, but the advertising must remain identifiable, operable, and
 substantively visible.
 
+When a derivative version is publicly released or distributed, it must use the
+latest official promotional content published by the copyright holder in the
+official project repository as of that release date. After release, previously
+published versions do not need to be retroactively updated solely because the
+official promotional content later changes. A new, updated, or repackaged
+derivative release must use the latest content as of its own release date.
+
 Advertising content and links are designated by the copyright holder. Third
 parties may not replace them with their own advertisements, trackers, or
-revenue-generating content.
+revenue-generating content. Displaying designated official promotional content
+solely to comply with these terms does not by itself constitute commercial use
+of the software by the licensee.
 
-Copyright © 2026 廷廷小教室（Tim945）
+Copyright © 2026 廷廷小教室、廷廷的家（Tim945）
 """
     )
 }
@@ -118,6 +133,7 @@ private let authorGitHubURL = URL(
 )!
 private let authorThreadsURL = URL(string: "https://www.threads.com/@tim945_1")!
 private let authorInstagramURL = URL(string: "https://www.instagram.com/tim945_1")!
+private let authorShopeeURL = URL(string: "https://shopee.tw/rr901037")!
 private let logitechStoreURL = URL(
     string: "https://store.logitech.tw/collections/logitech_gam"
 )!
@@ -465,8 +481,8 @@ private final class AboutWindow: NSPanel {
 
         let details = NSTextField(
             labelWithString: localized(
-                "版本：\(version)\n作者：廷廷小教室（Tim945）",
-                "Version: \(version)\nAuthor: 廷廷小教室（Tim945）"
+                "版本：\(version)\n作者：廷廷小教室、廷廷的家（Tim945）",
+                "Version: \(version)\nAuthor: 廷廷小教室、廷廷的家（Tim945）"
             )
         )
         details.alignment = .center
@@ -488,6 +504,11 @@ private final class AboutWindow: NSPanel {
                 label: "IG:",
                 displayedURL: "https://www.instagram.com/tim945_1",
                 destinationURL: authorInstagramURL
+            ),
+            ExternalLinkButton(
+                label: localized("作者官方商店（蝦皮）：", "Official Shopee Store:"),
+                displayedURL: "https://shopee.tw/rr901037",
+                destinationURL: authorShopeeURL
             )
         ])
         links.orientation = .vertical
