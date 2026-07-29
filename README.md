@@ -1,5 +1,7 @@
 # 桌面猴群 MonkeyDeskPets
 
+[繁體中文](README.md)｜[English](README-en.md)
+
 目前平台版本：
 
 - **macOS：2.7.4（正式版）**
@@ -38,6 +40,17 @@ macOS 版本啟動後，多個人物分身會用四肢爬行、跳躍、攀爬�
 點擊圖片可查看原始尺寸。若想使用自己的角色，可直接上傳 4×2 精靈圖；
 也可參考[使用 AI 製作 4×2 精靈圖](docs/AI-SPRITE-GUIDE-zh-TW.md)，把人物照片
 交給支援圖片生成的 AI 製作素材。只想快速換臉時，則可使用程式內的「懶人模式」。
+
+## 廣告／推廣資訊
+
+[![羅技 Logi 網路旗艦店電競專區宣傳優惠碼](png/羅技宣傳優惠碼.png)](https://store.logitech.tw/collections/logitech_gam)
+
+[羅技 Logi 網路旗艦店－電競專區](https://store.logitech.tw/collections/logitech_gam)
+
+> **關係聲明：** MonkeyDeskPets 是獨立開發專案，與羅技（Logitech／Logi）
+> 沒有隸屬、合作、贊助、背書或其他官方關係。羅技、Logitech、Logi 及相關
+> 產品名稱與商標均屬其各自權利人所有。上方內容為本專案內的獨立推廣資訊，
+> 優惠內容、價格、適用範圍及期限以商店頁面當下公告為準。
 
 ## 專案結構
 
@@ -168,8 +181,10 @@ release\MonkeyDeskPets-Windows-win-x64-Setup-v0.3.3.exe
 允許後可得到較完整的視窗資訊；程式不會擷取、保存或上傳畫面內容。即使不授權，
 人物仍可在螢幕範圍內活動。
 
-首次開啟自行建置且未簽署的 `.app` 時，若 Gatekeeper 阻擋，可在 Finder 對應用程式
-按右鍵選擇「打開」。正式散布時建議使用 Apple Developer ID 簽署及公證。
+建置腳本會在完整組裝 App 後套用臨時簽章並驗證完整性。臨時簽章不能取代
+Apple Developer ID；公開散布時仍應使用 Developer ID Application 簽署並完成
+Apple 公證。若可信的自行建置版本被下載隔離屬性阻擋，可執行
+`xattr -cr /Applications/MonkeyDeskPets.app`。詳細排除方式請參閱編譯與發行手冊。
 
 ## 操作
 
