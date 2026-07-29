@@ -297,7 +297,7 @@ inside a ZIP preview window.
 ## 12. Build the bilingual Windows installer
 
 The version is read automatically from `apps/windows/VERSION`. The current
-Windows version is `0.3.0`. After installing Inno Setup 6:
+Windows version is `0.3.3`. After installing Inno Setup 6:
 
 ```powershell
 cd apps\windows
@@ -316,7 +316,7 @@ If a portable build does not exist, the installer script first runs
 Output:
 
 ```text
-release\MonkeyDeskPets-Windows-win-x64-Setup-v0.3.0.exe
+release\MonkeyDeskPets-Windows-win-x64-Setup-v0.3.3.exe
 release\SHA256SUMS-Windows-win-x64-Setup.txt
 ```
 
@@ -332,7 +332,7 @@ The installer includes:
 ### Complete packaging procedure
 
 1. Confirm that `apps/windows/VERSION` and the `.csproj` version are both
-   `0.3.0`.
+   `0.3.3`.
 2. Run **Clean Solution** and **Rebuild Solution** in Visual Studio 2026.
 3. Close every running MonkeyDeskPets process.
 4. Open PowerShell at the repository root.
@@ -343,7 +343,7 @@ Set-ExecutionPolicy -Scope Process Bypass
 .\apps\windows\scripts\build-installer.ps1 -Runtime win-x64
 ```
 
-6. Run `release\MonkeyDeskPets-Windows-win-x64-Setup-v0.3.0.exe`.
+6. Run `release\MonkeyDeskPets-Windows-win-x64-Setup-v0.3.3.exe`.
 7. Test both the Traditional Chinese and English installer UI.
 8. Keep **Create a desktop shortcut** selected, finish installation, and
    launch the App from the desktop.
@@ -358,7 +358,7 @@ The root `.gitignore` excludes `.vs`, `bin`, `obj`, `dist`, `release`, `.exe`,
 
 ```powershell
 git status
-git check-ignore -v .\release\MonkeyDeskPets-Windows-win-x64-Setup-v0.3.0.exe
+git check-ignore -v .\release\MonkeyDeskPets-Windows-win-x64-Setup-v0.3.3.exe
 ```
 
 The installer should be ignored. `.cs`, `.csproj`, `.iss`, `.ps1`, license,
@@ -369,7 +369,7 @@ and documentation files should remain available to commit.
 ### PowerShell displays mojibake and reports `UnexpectedToken`
 
 Legacy Windows PowerShell 5.1 may interpret a UTF-8 file without BOM as the
-system ANSI code page. In project version `0.3.0`, all `.ps1` source files are
+system ANSI code page. In project version `0.3.3`, all `.ps1` source files are
 ASCII-only and the Traditional Chinese and English instructions are separate
 UTF-8 text files. If text such as `摰` still appears, an older script is being
 used. Download the latest complete package and replace
@@ -459,6 +459,15 @@ taskbar and locate the monkey icon.
 Do not copy a bare EXE out of the development directory. Use the complete ZIP
 from `build-release.ps1` or the installer from `build-installer.ps1`.
 
+The release script now verifies that required files such as
+`Assets\person-sprites.png` exist before creating the ZIP and stops if any are
+missing. A copy of the default sprite sheet is also embedded in the executable
+so the application can still start and restore its defaults if the external
+default image is accidentally removed.
+To avoid differences in how .NET SDK versions publish linked `Content` outside
+the project directory, the script explicitly copies shared assets and license
+documents into the publish directory after `dotnet publish` completes.
+
 ---
 
 # GitHub Actions and releases
@@ -510,8 +519,8 @@ version, and filenames must match:
 macOS Tag: macos-v2.7.4
 macOS Title: MonkeyDeskPets macOS v2.7.4
 
-Windows Tag: windows-v0.3.0
-Windows Title: MonkeyDeskPets Windows v0.3.0
+Windows Tag: windows-v0.3.3
+Windows Title: MonkeyDeskPets Windows v0.3.3
 ```
 
 ## 16. Verify SHA-256
@@ -525,7 +534,7 @@ shasum -a 256 release/MonkeyDeskPets-macOS-v2.7.4.dmg
 Windows:
 
 ```powershell
-Get-FileHash .\release\MonkeyDeskPets-Windows-win-x64-v0.3.0.zip -Algorithm SHA256
+Get-FileHash .\release\MonkeyDeskPets-Windows-win-x64-v0.3.3.zip -Algorithm SHA256
 ```
 
 The result must exactly match the corresponding `SHA256SUMS` file.

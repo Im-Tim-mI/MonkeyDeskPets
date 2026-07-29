@@ -42,9 +42,11 @@ internal sealed class PetWindow : Window
     internal double VelocityY { get; set; }
     internal double Age { get; set; }
     internal double PoseClock { get; set; }
+    internal double NextVerticalActionAge { get; set; }
     internal double EatingTimeRemaining { get; set; }
     internal bool FacingRight { get; set; } = true;
     internal bool IsBusy { get; set; }
+    internal bool IsSupported { get; set; }
     internal Pose CurrentPose { get; set; } = Pose.CrawlA;
     internal WpfPoint? EatingAnchor { get; set; }
     internal WpfVector EatingDirection { get; set; } = new(1, 0);

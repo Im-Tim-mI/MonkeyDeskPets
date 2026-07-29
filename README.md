@@ -3,7 +3,7 @@
 目前平台版本：
 
 - **macOS：2.7.4（正式版）**
-- **Windows：0.3.0**
+- **Windows：0.3.3**
 
 兩個平台各自使用 `apps/macos/VERSION` 與 `apps/windows/VERSION`，後續可
 獨立更新，不再共用同一個版本號。
@@ -132,19 +132,19 @@ cd apps\windows
 
 Windows 版已包含通知區選單、多人分身、拖曳、餵食、喊爸、爆炸退場、
 4×2 精靈圖上傳、綠幕透明化、懶人模式臉部自動裁切與套圖、一般視窗
-邊緣碰撞及完整關於／授權頁。Windows `0.3.0` 已以 macOS 版的 60 FPS
+邊緣碰撞及完整關於／授權頁。Windows `0.3.3` 已以 macOS 版的 60 FPS
 狀態機、11／17 秒行為週期、重力、餵食及喊爸流程重新規劃。臉部辨識與
 精靈圖生成均在本機完成。
 
 Windows 發行檔會依 `apps/windows/VERSION` 命名，例如：
 
 ```text
-release\MonkeyDeskPets-Windows-win-x64-v0.3.0.zip
-release\MonkeyDeskPets-Windows-win-x64-Setup-v0.3.0.exe
+release\MonkeyDeskPets-Windows-win-x64-v0.3.3.zip
+release\MonkeyDeskPets-Windows-win-x64-Setup-v0.3.3.exe
 ```
 
 建議 GitHub Release 分別使用 `macos-v2.7.4` 與
-`windows-v0.3.0` 標籤。
+`windows-v0.3.3` 標籤。
 
 ## macOS 權限
 

@@ -1,4 +1,5 @@
 using System.IO;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -9,6 +10,7 @@ internal sealed class SpriteStore
 {
     private const int Columns = 4;
     private const int Rows = 2;
+    private const string EmbeddedDefaultSprites = "MonkeyDeskPets.DefaultSprites.png";
     private readonly string bundledPath = Path.Combine(AppContext.BaseDirectory, "Assets", "person-sprites.png");
     private readonly string spriteDirectory = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
@@ -25,7 +27,9 @@ internal sealed class SpriteStore
     internal void Load()
     {
         var custom = Path.Combine(spriteDirectory, "sprites.png");
-        if (!TryLoadSheet(custom, out frames) && !TryLoadSheet(bundledPath, out frames))
+        if (!TryLoadSheet(custom, out frames) &&
+            !TryLoadSheet(bundledPath, out frames) &&
+            !TryLoadEmbeddedDefault(out frames))
             throw new InvalidDataException(L.T("找不到有效的預設精靈圖。", "No valid default sprite sheet was found."));
     }
 
@@ -107,6 +111,23 @@ internal sealed class SpriteStore
         return TrySplit(source, out result);
     }
 
+    private static bool TryLoadEmbeddedDefault(out BitmapSource[] result)
+    {
+        result = [];
+        try
+        {
+            using var stream = Assembly.GetExecutingAssembly()
+                .GetManifestResourceStream(EmbeddedDefaultSprites);
+            if (stream is null || !TryReadImage(stream, out var source))
+                return false;
+            return TrySplit(source, out result);
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
     private static bool TryReadImage(string path, out BitmapSource source)
     {
         source = null!;
@@ -115,6 +136,19 @@ internal sealed class SpriteStore
         try
         {
             using var stream = File.OpenRead(path);
+            return TryReadImage(stream, out source);
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private static bool TryReadImage(Stream stream, out BitmapSource source)
+    {
+        source = null!;
+        try
+        {
             var decoder = BitmapDecoder.Create(
                 stream,
                 BitmapCreateOptions.PreservePixelFormat,

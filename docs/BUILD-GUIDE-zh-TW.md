@@ -281,7 +281,7 @@ ZIP 必須完整解壓後再執行 `MonkeyDeskPets.exe`，不要直接在壓縮�
 
 ## 12. 建立 Windows 中英雙語安裝程式
 
-版本會自動讀取 `apps/windows/VERSION`。目前 Windows 版本為 `0.3.0`。
+版本會自動讀取 `apps/windows/VERSION`。目前 Windows 版本為 `0.3.3`。
 安裝 Inno Setup 6 後：
 
 ```powershell
@@ -298,7 +298,7 @@ Arm64：
 如果尚未建立可攜式版本，安裝腳本會先呼叫 `build-release.ps1`。輸出：
 
 ```text
-release\MonkeyDeskPets-Windows-win-x64-Setup-v0.3.0.exe
+release\MonkeyDeskPets-Windows-win-x64-Setup-v0.3.3.exe
 release\SHA256SUMS-Windows-win-x64-Setup.txt
 ```
 
@@ -313,7 +313,7 @@ release\SHA256SUMS-Windows-win-x64-Setup.txt
 
 ### 完整打包步驟
 
-1. 確認 `apps/windows/VERSION` 與 `.csproj` 版本均為 `0.3.0`。
+1. 確認 `apps/windows/VERSION` 與 `.csproj` 版本均為 `0.3.3`。
 2. 在 Visual Studio 2026 執行「清除方案」及「重建方案」。
 3. 關閉正在執行的 MonkeyDeskPets。
 4. 在專案根目錄開啟 PowerShell。
@@ -324,7 +324,7 @@ Set-ExecutionPolicy -Scope Process Bypass
 .\apps\windows\scripts\build-installer.ps1 -Runtime win-x64
 ```
 
-6. 執行 `release\MonkeyDeskPets-Windows-win-x64-Setup-v0.3.0.exe`。
+6. 執行 `release\MonkeyDeskPets-Windows-win-x64-Setup-v0.3.3.exe`。
 7. 分別測試繁體中文與英文安裝介面。
 8. 保持「建立桌面捷徑」勾選，完成安裝並從桌面啟動。
 9. 確認通知區圖示、選單、關於頁版本及解除安裝均正常。
@@ -337,7 +337,7 @@ Set-ExecutionPolicy -Scope Process Bypass
 
 ```powershell
 git status
-git check-ignore -v .\release\MonkeyDeskPets-Windows-win-x64-Setup-v0.3.0.exe
+git check-ignore -v .\release\MonkeyDeskPets-Windows-win-x64-Setup-v0.3.3.exe
 ```
 
 安裝程式應被忽略；`.cs`、`.csproj`、`.iss`、`.ps1`、授權與文件則應正常
@@ -348,7 +348,7 @@ git check-ignore -v .\release\MonkeyDeskPets-Windows-win-x64-Setup-v0.3.0.exe
 ### PowerShell 顯示亂碼並回報 `UnexpectedToken`
 
 舊版 Windows PowerShell 5.1 可能把 UTF-8 無 BOM 腳本誤判為系統 ANSI
-編碼。本專案 `0.3.0` 的 `.ps1` 已改為純 ASCII，繁中與英文說明改為獨立
+編碼。本專案 `0.3.3` 的 `.ps1` 已改為純 ASCII，繁中與英文說明改為獨立
 UTF-8 文字檔。如果仍出現 `摰` 等亂碼，代表使用的是舊腳本；請重新下載
 最新版完整包並覆蓋整個 `apps/windows/scripts`。
 
@@ -429,6 +429,12 @@ Windows 版是通知區程式。按工作列通知區的 `^`，尋找猴子圖�
 不要只複製開發目錄中的裸 EXE。請使用 `build-release.ps1` 產生的完整 ZIP，
 或使用 `build-installer.ps1` 產生的安裝程式。
 
+目前的發行腳本會在建立 ZIP 前確認 `Assets\person-sprites.png` 等必要素材
+確實存在；任何檔案缺失都會停止打包。預設精靈圖也會內嵌一份於程式內，
+即使外部預設圖片意外遺失，程式仍能啟動並執行「恢復預設精靈圖」。
+為避免不同 .NET SDK 對專案外部 `Content` 的 Publish 行為不一致，腳本會
+在 `dotnet publish` 完成後直接將共用素材與授權文件複製到發行目錄。
+
 ---
 
 # GitHub Actions 與發布
@@ -478,8 +484,8 @@ SHA256SUMS-Windows-win-x64-Setup.txt
 macOS Tag: macos-v2.7.4
 macOS Title: MonkeyDeskPets macOS v2.7.4
 
-Windows Tag: windows-v0.3.0
-Windows Title: MonkeyDeskPets Windows v0.3.0
+Windows Tag: windows-v0.3.3
+Windows Title: MonkeyDeskPets Windows v0.3.3
 ```
 
 ## 16. SHA-256 驗證
@@ -493,7 +499,7 @@ shasum -a 256 release/MonkeyDeskPets-macOS-v2.7.4.dmg
 Windows：
 
 ```powershell
-Get-FileHash .\release\MonkeyDeskPets-Windows-win-x64-v0.3.0.zip -Algorithm SHA256
+Get-FileHash .\release\MonkeyDeskPets-Windows-win-x64-v0.3.3.zip -Algorithm SHA256
 ```
 
 結果必須和對應的 `SHA256SUMS` 文件完全一致。

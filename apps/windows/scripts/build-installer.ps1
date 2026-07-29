@@ -19,9 +19,9 @@ $IsccCandidates = @(
 )
 $Iscc = $IsccCandidates | Where-Object { Test-Path $_ } | Select-Object -First 1
 
-if (-not (Test-Path (Join-Path $PublishDir "MonkeyDeskPets.exe"))) {
-    & (Join-Path $PSScriptRoot "build-release.ps1") -Runtime $Runtime
-}
+# Always rebuild the publish directory so an old executable or an incomplete
+# asset directory cannot be reused by the installer.
+& (Join-Path $PSScriptRoot "build-release.ps1") -Runtime $Runtime
 if (-not $Iscc) {
     throw "Inno Setup 6 was not found. Install it from https://jrsoftware.org/isdl.php"
 }

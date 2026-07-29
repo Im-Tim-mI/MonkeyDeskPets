@@ -16,7 +16,7 @@ internal sealed class AboutWindow : Window
     private static string AppVersion =>
         typeof(AboutWindow).Assembly
             .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
-            .InformationalVersion.Split('+')[0] ?? "0.3.0";
+            .InformationalVersion.Split('+')[0] ?? "0.3.3";
     private const string GitHub = "https://github.com/Im-Tim-mI";
     private const string Threads = "https://www.threads.com/@tim945_1";
     private const string Instagram = "https://www.instagram.com/tim945_1";

@@ -1,6 +1,6 @@
 # MonkeyDeskPets for Windows
 
-目前版本：**0.3.0**
+目前版本：**0.3.3**
 
 Windows 版使用 C#、WPF 與 .NET 8，支援 Windows 10 版本 1809 以上及
 Windows 11。程式採通知區常駐模式，不會顯示一般主視窗。
@@ -72,7 +72,7 @@ Arm64：
 輸出：
 
 ```text
-release\MonkeyDeskPets-Windows-win-x64-v0.3.0.zip
+release\MonkeyDeskPets-Windows-win-x64-v0.3.3.zip
 release\SHA256SUMS-Windows-win-x64.txt
 ```
 
@@ -87,7 +87,7 @@ release\SHA256SUMS-Windows-win-x64.txt
 輸出：
 
 ```text
-release\MonkeyDeskPets-Windows-win-x64-Setup-v0.3.0.exe
+release\MonkeyDeskPets-Windows-win-x64-Setup-v0.3.3.exe
 ```
 
 安裝程式提供繁體中文與英文介面；「建立桌面啟動捷徑」預設勾選，使用者

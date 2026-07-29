@@ -98,7 +98,7 @@ internal sealed class DesktopPetController : IDisposable
     private static string AppVersion =>
         typeof(DesktopPetController).Assembly
             .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
-            .InformationalVersion.Split('+')[0] ?? "0.3.0";
+            .InformationalVersion.Split('+')[0] ?? "0.3.3";
 
     private void RebuildMenu()
     {
@@ -180,13 +180,15 @@ internal sealed class DesktopPetController : IDisposable
         var width = Math.Max(1, SystemParameters.VirtualScreenWidth - PetWidth);
         var height = Math.Max(1, SystemParameters.VirtualScreenHeight - PetHeight);
         var direction = random.Next(0, 2) == 0 ? -1d : 1d;
+        var age = RandomBetween(0, 20);
         var pet = new PetWindow
         {
             Left = left + random.NextDouble() * width,
             Top = top + random.NextDouble() * height,
             VelocityX = direction * RandomBetween(75, 135),
             VelocityY = RandomBetween(-25, 15),
-            Age = RandomBetween(0, 20),
+            Age = age,
+            NextVerticalActionAge = age + RandomBetween(2.5, 5.5),
             CurrentPose = Pose.CrawlA,
             IsHitTestVisible = !ignoreMouse
         };
@@ -326,12 +328,23 @@ internal sealed class DesktopPetController : IDisposable
 
     private void UpdateBehavior(PetWindow pet, double delta)
     {
+        var wasSupported = pet.IsSupported;
+        pet.IsSupported = false;
         pet.VelocityY += Gravity * delta;
 
-        if ((int)pet.Age % 11 == 0 && pet.PoseClock > 1.4)
+        // Vertical movement has its own randomized schedule. A pet that is
+        // standing on the desktop or a window edge will periodically launch
+        // into a substantial diagonal jump instead of remaining on one row.
+        if (pet.Age >= pet.NextVerticalActionAge &&
+            (wasSupported || Math.Abs(pet.VelocityY) < 45))
         {
-            pet.VelocityY = -RandomBetween(115, 185);
-            pet.VelocityX *= RandomBetween(0.85, 1.18);
+            var keepDirection = Math.Abs(pet.VelocityX) >= 1 && random.NextDouble() < 0.55;
+            var direction = keepDirection
+                ? Math.Sign(pet.VelocityX)
+                : (random.Next(0, 2) == 0 ? -1 : 1);
+            pet.VelocityX = direction * RandomBetween(70, 145);
+            pet.VelocityY = -RandomBetween(120, 220);
+            pet.NextVerticalActionAge = pet.Age + RandomBetween(3.8, 7.2);
             pet.CurrentPose = Pose.Leap;
             pet.PoseClock = 0;
         }
@@ -368,6 +381,8 @@ internal sealed class DesktopPetController : IDisposable
         {
             pet.Left = left;
             pet.VelocityX = Math.Abs(pet.VelocityX);
+            pet.VelocityY = -RandomBetween(85, 155);
+            pet.NextVerticalActionAge = pet.Age + RandomBetween(3.8, 7.2);
             pet.CurrentPose = Pose.Climb;
             pet.PoseClock = 0;
         }
@@ -375,6 +390,8 @@ internal sealed class DesktopPetController : IDisposable
         {
             pet.Left = right;
             pet.VelocityX = -Math.Abs(pet.VelocityX);
+            pet.VelocityY = -RandomBetween(85, 155);
+            pet.NextVerticalActionAge = pet.Age + RandomBetween(3.8, 7.2);
             pet.CurrentPose = Pose.Climb;
             pet.PoseClock = 0;
         }
@@ -389,7 +406,8 @@ internal sealed class DesktopPetController : IDisposable
         else if (pet.Top >= bottom)
         {
             pet.Top = bottom;
-            pet.VelocityY = -Math.Abs(pet.VelocityY) * 0.45;
+            pet.VelocityY = 0;
+            pet.IsSupported = true;
         }
     }
 
@@ -418,8 +436,8 @@ internal sealed class DesktopPetController : IDisposable
                 continue;
 
             pet.Top = obstacle.Top - PetHeight;
-            pet.VelocityY = -RandomBetween(5, 24);
-            pet.VelocityX *= random.Next(0, 2) == 0 ? -1 : 1;
+            pet.VelocityY = 0;
+            pet.IsSupported = true;
             pet.CurrentPose = Pose.Crouch;
             pet.PoseClock = 0;
             return;

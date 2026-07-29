@@ -34,11 +34,64 @@ dotnet publish $Project `
     -p:DebugSymbols=false `
     --output $PublishDir
 
+if ($LASTEXITCODE -ne 0) {
+    throw "dotnet publish failed with exit code $LASTEXITCODE."
+}
+
+# Copy external shared assets and license files explicitly. Linked Content
+# items outside the project directory are not copied consistently by every
+# .NET SDK publish configuration, especially with single-file publishing.
+$AssetsDir = Join-Path $PublishDir "Assets"
+$LicensesDir = Join-Path $PublishDir "Licenses"
+New-Item $AssetsDir -ItemType Directory -Force | Out-Null
+New-Item $LicensesDir -ItemType Directory -Force | Out-Null
+
+Copy-Item (Join-Path $RepositoryRoot "shared\assets\person-sprites.png") `
+    (Join-Path $AssetsDir "person-sprites.png") -Force
+Copy-Item (Join-Path $RepositoryRoot "shared\assets\author-avatar.png") `
+    (Join-Path $AssetsDir "author-avatar.png") -Force
+Copy-Item (Join-Path $RepositoryRoot "shared\assets\logitech-ad.jpeg") `
+    (Join-Path $AssetsDir "logitech-ad.jpeg") -Force
+Copy-Item (Join-Path $WindowsDir "src\MonkeyDeskPets.Windows\Assets\MonkeyDeskPets.ico") `
+    (Join-Path $AssetsDir "MonkeyDeskPets.ico") -Force
+
+Copy-Item (Join-Path $RepositoryRoot "LICENSE") `
+    (Join-Path $LicensesDir "LICENSE.txt") -Force
+Copy-Item (Join-Path $RepositoryRoot "NOTICE") `
+    (Join-Path $LicensesDir "NOTICE.txt") -Force
+Copy-Item (Join-Path $RepositoryRoot "ADDITIONAL-TERMS-zh-TW.txt") `
+    (Join-Path $LicensesDir "ADDITIONAL-TERMS-zh-TW.txt") -Force
+Copy-Item (Join-Path $RepositoryRoot "ADDITIONAL-TERMS-en.txt") `
+    (Join-Path $LicensesDir "ADDITIONAL-TERMS-en.txt") -Force
+Copy-Item (Join-Path $RepositoryRoot "POLYFORM-NONCOMMERCIAL-1.0.0.txt") `
+    (Join-Path $LicensesDir "POLYFORM-NONCOMMERCIAL-1.0.0.txt") -Force
+
 $InstallerDir = Join-Path $WindowsDir "installer"
 Copy-Item (Join-Path $InstallerDir "README-zh-TW.txt") `
     (Join-Path $PublishDir "README-zh-TW.txt") -Force
 Copy-Item (Join-Path $InstallerDir "README-en.txt") `
     (Join-Path $PublishDir "README-en.txt") -Force
+
+$RequiredPublishFiles = @(
+    "MonkeyDeskPets.exe",
+    "Assets\person-sprites.png",
+    "Assets\author-avatar.png",
+    "Assets\logitech-ad.jpeg",
+    "Assets\MonkeyDeskPets.ico",
+    "Licenses\LICENSE.txt",
+    "Licenses\NOTICE.txt",
+    "Licenses\ADDITIONAL-TERMS-zh-TW.txt",
+    "Licenses\ADDITIONAL-TERMS-en.txt",
+    "Licenses\POLYFORM-NONCOMMERCIAL-1.0.0.txt",
+    "README-zh-TW.txt",
+    "README-en.txt"
+)
+foreach ($RelativePath in $RequiredPublishFiles) {
+    $RequiredPath = Join-Path $PublishDir $RelativePath
+    if (-not (Test-Path $RequiredPath -PathType Leaf)) {
+        throw "Required publish file is missing: $RequiredPath"
+    }
+}
 
 Remove-Item $ZipPath -Force -ErrorAction SilentlyContinue
 Compress-Archive -Path (Join-Path $PublishDir "*") -DestinationPath $ZipPath -CompressionLevel Optimal

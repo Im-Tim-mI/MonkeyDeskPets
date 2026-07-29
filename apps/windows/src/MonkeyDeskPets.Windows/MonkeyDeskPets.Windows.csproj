@@ -15,36 +15,52 @@
     <ApplicationIcon>Assets\MonkeyDeskPets.ico</ApplicationIcon>
     <AssemblyName>MonkeyDeskPets</AssemblyName>
     <RootNamespace>MonkeyDeskPets.Windows</RootNamespace>
-    <Version>0.3.0</Version>
+    <Version>0.3.3</Version>
     <Authors>廷廷小教室、廷廷的家（Tim945）</Authors>
     <Copyright>Copyright © 2026 廷廷小教室、廷廷的家（Tim945）</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Update="Assets\MonkeyDeskPets.ico" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="Assets\MonkeyDeskPets.ico"
+          CopyToOutputDirectory="PreserveNewest"
+          CopyToPublishDirectory="PreserveNewest" />
     <Content Include="..\..\..\..\shared\assets\person-sprites.png"
              Link="Assets\person-sprites.png"
-             CopyToOutputDirectory="PreserveNewest" />
+             CopyToOutputDirectory="PreserveNewest"
+             CopyToPublishDirectory="PreserveNewest" />
+    <!--
+      Keep an assembly-embedded fallback so Restore Default Sprites and initial
+      startup still work if an external package is accidentally incomplete.
+    -->
+    <EmbeddedResource Include="..\..\..\..\shared\assets\person-sprites.png"
+                      LogicalName="MonkeyDeskPets.DefaultSprites.png" />
     <Content Include="..\..\..\..\shared\assets\author-avatar.png"
              Link="Assets\author-avatar.png"
-             CopyToOutputDirectory="PreserveNewest" />
+             CopyToOutputDirectory="PreserveNewest"
+             CopyToPublishDirectory="PreserveNewest" />
     <Content Include="..\..\..\..\shared\assets\logitech-ad.jpeg"
              Link="Assets\logitech-ad.jpeg"
-             CopyToOutputDirectory="PreserveNewest" />
+             CopyToOutputDirectory="PreserveNewest"
+             CopyToPublishDirectory="PreserveNewest" />
     <Content Include="..\..\..\..\LICENSE"
              Link="Licenses\LICENSE.txt"
-             CopyToOutputDirectory="PreserveNewest" />
+             CopyToOutputDirectory="PreserveNewest"
+             CopyToPublishDirectory="PreserveNewest" />
     <Content Include="..\..\..\..\NOTICE"
              Link="Licenses\NOTICE.txt"
-             CopyToOutputDirectory="PreserveNewest" />
+             CopyToOutputDirectory="PreserveNewest"
+             CopyToPublishDirectory="PreserveNewest" />
     <Content Include="..\..\..\..\ADDITIONAL-TERMS-zh-TW.txt"
              Link="Licenses\ADDITIONAL-TERMS-zh-TW.txt"
-             CopyToOutputDirectory="PreserveNewest" />
+             CopyToOutputDirectory="PreserveNewest"
+             CopyToPublishDirectory="PreserveNewest" />
     <Content Include="..\..\..\..\ADDITIONAL-TERMS-en.txt"
              Link="Licenses\ADDITIONAL-TERMS-en.txt"
-             CopyToOutputDirectory="PreserveNewest" />
+             CopyToOutputDirectory="PreserveNewest"
+             CopyToPublishDirectory="PreserveNewest" />
     <Content Include="..\..\..\..\POLYFORM-NONCOMMERCIAL-1.0.0.txt"
              Link="Licenses\POLYFORM-NONCOMMERCIAL-1.0.0.txt"
-             CopyToOutputDirectory="PreserveNewest" />
+             CopyToOutputDirectory="PreserveNewest"
+             CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>
