@@ -67,29 +67,18 @@ if [[ ! -f "$background_file" ]]; then
     exit 1
 fi
 
-write_finder_layout() {
-    osascript <<APPLESCRIPT
+osascript <<APPLESCRIPT
 set dmgFolder to POSIX file "$mount_point" as alias
 set backgroundFile to POSIX file "$background_file" as alias
 
 tell application "Finder"
     open dmgFolder
-    delay 2
+    delay 1
     set dmgWindow to container window of dmgFolder
     set current view of dmgWindow to icon view
-
-    -- 某些 macOS／Finder 版本不允許修改這些視窗裝飾屬性。
-    -- 它們只影響外觀，失敗時不應中止後續核心版面與 .DS_Store 寫入。
-    try
-        set toolbar visible of dmgWindow to false
-    end try
-    try
-        set statusbar visible of dmgWindow to false
-    end try
-    try
-        set pathbar visible of dmgWindow to false
-    end try
-
+    set toolbar visible of dmgWindow to false
+    set statusbar visible of dmgWindow to false
+    set pathbar visible of dmgWindow to false
     set bounds of dmgWindow to {120, 120, 760, 520}
     set theViewOptions to the icon view options of dmgWindow
     set arrangement of theViewOptions to not arranged
@@ -101,40 +90,12 @@ tell application "Finder"
     update dmgFolder without registering applications
     delay 5
     close dmgWindow
-    delay 2
 end tell
 APPLESCRIPT
-}
-
-layout_written=false
-for attempt in 1 2 3; do
-    echo "寫入 Finder 安裝版面（第 $attempt 次）……"
-    if ! write_finder_layout; then
-        echo "警告：Finder 第 $attempt 次設定版面失敗，準備重試。" >&2
-    fi
-
-    # Finder 的 .DS_Store 寫入是非同步的，最多等待 12 秒再決定是否重試。
-    for _ in {1..12}; do
-        if [[ -s "$mount_point/.DS_Store" ]]; then
-            layout_written=true
-            break
-        fi
-        sleep 1
-    done
-
-    if [[ "$layout_written" == true ]]; then
-        break
-    fi
-done
-
-if [[ "$layout_written" != true ]]; then
-    echo "錯誤：Finder 重試 3 次後仍未寫入 DMG 版面設定（.DS_Store）。" >&2
-    exit 1
-fi
 
 sync
 
-hdiutil detach "$mounted_device" >/dev/null
+hdiutil detach "$mounted_device"
 mounted_device=""
 mount_point=""
 
@@ -158,7 +119,7 @@ if [[ ! -f "$mount_point/.background/installer-background.png" ]]; then
     exit 1
 fi
 
-hdiutil detach "$mounted_device" >/dev/null
+hdiutil detach "$mounted_device"
 mounted_device=""
 mount_point=""
 

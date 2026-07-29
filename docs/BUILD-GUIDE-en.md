@@ -134,10 +134,7 @@ The script automatically:
 4. Generates the Traditional Chinese and English DMG background.
 5. Adds `MonkeyDeskPets.app` and an `Applications` shortcut.
 6. Arranges the drag-to-install icons.
-7. Verifies both the SwiftPM resource bundle and the independent built-in
-   sprite fallback inside the App.
-8. Verifies the completed App signature.
-9. Creates the compressed DMG and SHA-256 file.
+7. Creates the compressed DMG and SHA-256 file.
 
 The version is read from `apps/macos/VERSION`:
 
@@ -159,30 +156,20 @@ Mount the DMG and verify:
 - The `Applications` shortcut works.
 - The App launches after being dragged to Applications.
 
-## 7. macOS signing and Gatekeeper
+## 7. Unsigned macOS builds
 
-When no certificate is specified, `build-app.sh` removes inherited quarantine
-attributes after assembling the complete App and applies an ad-hoc signature.
-This verifies file integrity but does not replace an Apple Developer ID.
-Gatekeeper may still warn other users after they download the App.
+Without an Apple Developer ID signature, Gatekeeper may warn other users on
+first launch. In Finder, right-click the App, choose `Open`, then confirm.
 
-To build with an installed Developer ID Application certificate:
-
-```bash
-MACOS_SIGNING_IDENTITY="Developer ID Application: Your Name (TEAMID)" \
-  ./apps/macos/scripts/build-dmg.sh
-```
-
-A public production release must also be notarized by Apple. Inspect the
-signature with:
+For a public production release, use an Apple Developer ID Application
+certificate and Apple notarization. You can inspect a signature with:
 
 ```bash
 codesign --verify --deep --strict --verbose=2 \
   apps/macos/dist/MonkeyDeskPets.app
 ```
 
-The scripts do not store certificate names or passwords. They use a
-certificate only when `MACOS_SIGNING_IDENTITY` is explicitly set.
+The normal build scripts never store or select a developer certificate.
 
 ## 8. Common macOS build problems
 
@@ -210,51 +197,6 @@ hdiutil detach "/Volumes/MonkeyDeskPets"
 
 If the volume is not found, it is already detached and you may rerun
 `build-dmg.sh`.
-
-### `Finder layout settings (.DS_Store) are still missing`
-
-The current script waits for Finder and retries the layout operation three
-times. Do not quit or force-restart Finder while the build is running. If an
-old volume is still mounted, run:
-
-```bash
-hdiutil detach "/Volumes/MonkeyDeskPets" 2>/dev/null || true
-./apps/macos/scripts/build-dmg.sh
-```
-
-If Terminal previously reported that Finder could not set `toolbar visible`
-with error `-10006`, that Finder version does not allow the toolbar appearance
-to be changed. The current script treats toolbar, status bar, and path bar
-settings as optional. A rejected decoration setting no longer prevents the
-background, icon positions, and `.DS_Store` from being written.
-
-### `MonkeyDeskPets.app is damaged and can't be opened`
-
-Check the App signature first:
-
-```bash
-codesign --verify --deep --strict --verbose=2 \
-  /Applications/MonkeyDeskPets.app
-```
-
-For a locally built or otherwise trusted ad-hoc signed copy, remove its
-download quarantine attribute:
-
-```bash
-xattr -cr /Applications/MonkeyDeskPets.app
-```
-
-To prevent this warning for public downloads, sign with a Developer ID
-Application certificate and notarize the release. An ad-hoc signature alone
-cannot guarantee that a downloaded App passes Gatekeeper.
-
-### Restore Defaults reports that the built-in sprite is missing
-
-The current App keeps the default sheet both at
-`Contents/Resources/person-sprites.png` and inside the SwiftPM resource
-bundle. Startup, Lazy Mode, and Restore Defaults use the same multi-path
-fallback loader. The build stops instead of producing an App if either
-packaged fallback is missing or invalid.
 
 ### `Constant must be declared private`
 

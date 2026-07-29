@@ -995,7 +995,11 @@ private final class DesktopPetController: NSObject, NSApplicationDelegate {
         guard confirmation.runModal() == .alertFirstButtonReturn else { return }
 
         do {
-            guard let sheet = loadBuiltInSpriteSheet() else {
+            guard let url = Bundle.module.url(
+                forResource: "person-sprites",
+                withExtension: "png"
+            ), let source = CGImageSourceCreateWithURL(url as CFURL, nil),
+               let sheet = CGImageSourceCreateImageAtIndex(source, 0, nil) else {
                 throw spriteError(localized(
                     "找不到程式內建的預設精靈圖。",
                     "The built-in default sprite sheet could not be found."
@@ -1152,7 +1156,11 @@ private final class DesktopPetController: NSObject, NSApplicationDelegate {
                     "No clear frontal face was found. Use a well-lit photo showing the complete face."
                 ))
             }
-            guard let template = loadBuiltInSpriteSheet() else {
+            guard let templateURL = Bundle.module.url(
+                forResource: "person-sprites",
+                withExtension: "png"
+            ), let templateSource = CGImageSourceCreateWithURL(templateURL as CFURL, nil),
+               let template = CGImageSourceCreateImageAtIndex(templateSource, 0, nil) else {
                 throw spriteError(localized(
                     "找不到程式內建的預設精靈圖。",
                     "The built-in default sprite sheet could not be found."
@@ -1723,59 +1731,10 @@ private final class DesktopPetController: NSObject, NSApplicationDelegate {
             return customFrames
         }
 
-        guard let sheet = loadBuiltInSpriteSheet() else { return [] }
+        let url = Bundle.module.url(forResource: "person-sprites", withExtension: "png")
+        guard let url, let source = CGImageSourceCreateWithURL(url as CFURL, nil),
+              let sheet = CGImageSourceCreateImageAtIndex(source, 0, nil) else { return [] }
         return splitSpriteSheet(sheet).map { NSImage(cgImage: $0, size: characterSize) }
-    }
-
-    /// 依序搜尋 App Resources 直放備份及 SwiftPM 資源包。
-    /// 不直接依賴 Bundle.module，避免手工組裝 App 時資源包位置不同而中止。
-    private func builtInSpriteSheetURL() -> URL? {
-        let fileManager = FileManager.default
-        let resourceBundleName = "MonkeyDeskPets_MonkeyDeskPets.bundle"
-        var candidates: [URL] = []
-
-        if let resources = Bundle.main.resourceURL {
-            candidates.append(resources.appendingPathComponent("person-sprites.png"))
-            candidates.append(
-                resources
-                    .appendingPathComponent(resourceBundleName, isDirectory: true)
-                    .appendingPathComponent("person-sprites.png")
-            )
-        }
-
-        candidates.append(
-            Bundle.main.bundleURL
-                .appendingPathComponent(resourceBundleName, isDirectory: true)
-                .appendingPathComponent("person-sprites.png")
-        )
-
-        if let executableDirectory = Bundle.main.executableURL?.deletingLastPathComponent() {
-            candidates.append(
-                executableDirectory
-                    .appendingPathComponent(resourceBundleName, isDirectory: true)
-                    .appendingPathComponent("person-sprites.png")
-            )
-            candidates.append(
-                executableDirectory
-                    .deletingLastPathComponent()
-                    .appendingPathComponent("Resources", isDirectory: true)
-                    .appendingPathComponent("person-sprites.png")
-            )
-        }
-
-        return candidates.first {
-            fileManager.isReadableFile(atPath: $0.path)
-        }
-    }
-
-    private func loadBuiltInSpriteSheet() -> CGImage? {
-        guard let url = builtInSpriteSheetURL(),
-              let source = CGImageSourceCreateWithURL(url as CFURL, nil),
-              let sheet = CGImageSourceCreateImageAtIndex(source, 0, nil),
-              splitSpriteSheet(sheet).count == Pose.allCases.count else {
-            return nil
-        }
-        return sheet
     }
 
     private func splitSpriteSheet(_ sheet: CGImage) -> [CGImage] {

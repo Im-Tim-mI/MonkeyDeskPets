@@ -131,9 +131,7 @@ chmod +x apps/macos/scripts/*.sh
 4. 產生繁體中文／英文 DMG 安裝背景。
 5. 放入 `MonkeyDeskPets.app` 與 `Applications` 捷徑。
 6. 排列拖曳安裝圖示。
-7. 驗證 App 內同時具有 SwiftPM 資源包與獨立預設精靈圖備份。
-8. 對 App 進行簽章完整性驗證。
-9. 建立壓縮 DMG 與 SHA-256。
+7. 建立壓縮 DMG 與 SHA-256。
 
 輸出檔名會自動讀取 `apps/macos/VERSION`：
 
@@ -155,28 +153,20 @@ open release
 - `Applications` 捷徑可以使用。
 - 將 App 拖入 Applications 後可以啟動。
 
-## 7. macOS 簽署與 Gatekeeper
+## 7. macOS 未簽署程式
 
-未指定憑證時，`build-app.sh` 會在完整組裝 App 後自動清除建置來源的隔離屬性，
-並套用臨時簽章，避免 App 內資源在簽章後才被加入。臨時簽章只能驗證檔案完整性，
-不能取代 Apple Developer ID；其他使用者下載後仍可能看到 Gatekeeper 警告。
+沒有 Apple Developer ID 簽署時，其他使用者第一次開啟可能看到 Gatekeeper
+警告。可在 Finder 對 App 按右鍵，選擇「打開」，再確認一次。
 
-如要使用已安裝的 Developer ID Application 憑證建置：
-
-```bash
-MACOS_SIGNING_IDENTITY="Developer ID Application: 你的名稱 (TEAMID)" \
-  ./apps/macos/scripts/build-dmg.sh
-```
-
-正式公開發行仍須完成 Apple 公證。簽章可用下列指令檢查：
+正式公開發行建議使用 Apple Developer ID Application 憑證簽署並完成 Apple
+公證。簽署前可檢查：
 
 ```bash
 codesign --verify --deep --strict --verbose=2 \
   apps/macos/dist/MonkeyDeskPets.app
 ```
 
-腳本不會保存憑證名稱或密碼；只有明確設定 `MACOS_SIGNING_IDENTITY` 時才會使用
-指定憑證。
+此專案的普通建置腳本不會擅自使用或保存你的開發者憑證。
 
 ## 8. macOS 常見錯誤
 
@@ -201,44 +191,6 @@ hdiutil detach "/Volumes/MonkeyDeskPets"
 ```
 
 如果顯示找不到該磁碟，代表已經卸載，可直接重新執行 `build-dmg.sh`。
-
-### `DMG 卸載後仍找不到 Finder 版面設定（.DS_Store）`
-
-最新版腳本會等待 Finder 寫入並自動重試三次。建置時不要關閉 Finder，也不要在
-腳本執行期間手動退出或強制重新啟動 Finder。若舊掛載尚未卸載，先執行：
-
-```bash
-hdiutil detach "/Volumes/MonkeyDeskPets" 2>/dev/null || true
-./apps/macos/scripts/build-dmg.sh
-```
-
-若終端機曾顯示 Finder 無法設定 `toolbar visible`（錯誤 `-10006`），這只是特定
-Finder 版本不允許修改工具列外觀。最新版腳本已將工具列、狀態列與路徑列設定改為
-非必要操作；即使遭拒，也會繼續寫入背景、圖示位置及 `.DS_Store`。
-
-### 「MonkeyDeskPets.app」已損毀，無法打開
-
-先確認 App 完整性：
-
-```bash
-codesign --verify --deep --strict --verbose=2 \
-  /Applications/MonkeyDeskPets.app
-```
-
-若是自行建置或確認來源可信的臨時簽章版本，可重新清除下載隔離屬性：
-
-```bash
-xattr -cr /Applications/MonkeyDeskPets.app
-```
-
-公開散布要避免使用者看到此訊息，必須使用 Developer ID Application 簽署並完成
-Apple 公證；只有臨時簽章無法保證通過下載後的 Gatekeeper 檢查。
-
-### 「恢復預設」顯示找不到預設精靈圖
-
-最新版 App 會在 `Contents/Resources/person-sprites.png` 與 SwiftPM 資源包內各保留
-一份預設圖，啟動、懶人模式及恢復預設都使用相同的多路徑回退程序。若建置腳本
-偵測到任一備份缺少或無效，會直接停止，不再輸出缺少預設圖的 App。
 
 ### `Constant must be declared private`
 
