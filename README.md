@@ -168,8 +168,10 @@ release\MonkeyDeskPets-Windows-win-x64-Setup-v0.3.3.exe
 允許後可得到較完整的視窗資訊；程式不會擷取、保存或上傳畫面內容。即使不授權，
 人物仍可在螢幕範圍內活動。
 
-首次開啟自行建置且未簽署的 `.app` 時，若 Gatekeeper 阻擋，可在 Finder 對應用程式
-按右鍵選擇「打開」。正式散布時建議使用 Apple Developer ID 簽署及公證。
+建置腳本會在完整組裝 App 後套用臨時簽章並驗證完整性。臨時簽章不能取代
+Apple Developer ID；公開散布時仍應使用 Developer ID Application 簽署並完成
+Apple 公證。若可信的自行建置版本被下載隔離屬性阻擋，可執行
+`xattr -cr /Applications/MonkeyDeskPets.app`。詳細排除方式請參閱編譯與發行手冊。
 
 ## 操作
 
