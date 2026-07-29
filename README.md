@@ -17,6 +17,7 @@
 - [macOS／Windows 完整編譯與發行手冊（繁體中文）](docs/BUILD-GUIDE-zh-TW.md)
 - [macOS / Windows Build & Release Guide (English)](docs/BUILD-GUIDE-en.md)
 - [使用 AI 製作 4×2 精靈圖（提示詞與範例）](docs/AI-SPRITE-GUIDE-zh-TW.md)
+- [Create a 4×2 Sprite Sheet with AI (Prompt and Examples)](docs/AI-SPRITE-GUIDE-en.md)
 
 MonkeyDeskPets 是跨平台桌面寵物專案，目前提供原生 macOS 版本與使用
 C#／WPF 製作的 Windows 版本。
@@ -29,8 +30,10 @@ macOS 版本啟動後，多個人物分身會用四肢爬行、跳躍、攀爬�
 | 全螢幕活動與視窗互動 | 餵食功能 |
 |---|---|
 | [![人物會在桌面與視窗周圍活動](png/動物.png)](png/動物.png) | [![放置狗糧後，最近的人物會前往進食](png/餵食.png)](png/餵食.png) |
-| **「爸」集合功能** | **懶人模式套用臉部** |
+| **叫「爸」功能** | **懶人模式套用臉部** |
 | [![所有人物到底部集合並顯示「爸」](png/爸.png)](png/爸.png) | [![上傳大頭照後套用至內建動作](png/懶人模式套用後樣子.png)](png/懶人模式套用後樣子.png) |
+| **精靈圖替換功能** | **精靈圖替換功能（綠幕版）** |
+| [![精靈圖上傳替換功能](png/精靈圖範例1.png)](png/精靈圖範例1.png) | [![精靈圖上傳替換功能（綠幕）](png/精靈圖範例2.png)](png/精靈圖範例2.png) |
 
 點擊圖片可查看原始尺寸。若想使用自己的角色，可直接上傳 4×2 精靈圖；
 也可參考[使用 AI 製作 4×2 精靈圖](docs/AI-SPRITE-GUIDE-zh-TW.md)，把人物照片
